@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeonAnima - Discover Your Inner Resonance</title>
+  <style>
+    :root {
+      --primary-color: #6a3cb5;
+      --primary-light: #8a63d2;
+      --primary-dark: #4e2c87;
+      --secondary-color: #3498db;
+      --background: #121212;
+      --card-background: #1e1e1e;
+      --text-color: #e0e0e0;
+      --light-text: #aaaaaa;
+      --accent-color: #9d4edd;
+      
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+      
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2.5rem;
+      
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      
+      --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--text-color);
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0f1a, #1a1a2e, #2c1a4d, #38195a);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    
+    .logo {
+      margin-bottom: var(--spacing-xl);
+    }
+    
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 3.5rem;
+      margin-bottom: var(--spacing-lg);
+      color: white;
+      text-shadow: var(--text-shadow);
+      background: linear-gradient(135deg, #c2a0e5, #9d4edd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin-bottom: var(--spacing-xl);
+      line-height: 1.6;
+    }
+    
+    .cta-button {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: white;
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 20px rgba(157, 78, 221, 0.6);
+    }
+    
+    .cta-button:before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      width: 120%;
+      height: 120%;
+      background: linear-gradient(135deg, rgba(157, 78, 221, 0.3), rgba(106, 60, 181, 0.1));
+      transform: rotate(45deg);
+      z-index: -1;
+      transition: all 0.5s ease;
+    }
+    
+    .cta-button:hover:before {
+      transform: rotate(45deg) translate(10%, 10%);
+    }
+    
+    .cosmic-sphere {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .cosmic-sphere.top-right {
+      top: -50px;
+      right: -50px;
+      animation: float 8s ease-in-out infinite;
+    }
+    
+    .cosmic-sphere.bottom-left {
+      bottom: -50px;
+      left: -50px;
+      animation: float 10s ease-in-out infinite;
+    }
+    
+    .orb {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(157, 78, 221, 0.3), rgba(106, 60, 181, 0.1));
+      box-shadow: 0 0 50px rgba(157, 78, 221, 0.3);
+    }
+    
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: pulse 3s infinite;
+    }
+    
+    .testimonial {
+      margin-top: var(--spacing-xl);
+      padding: var(--spacing-md);
+      background: rgba(30, 30, 30, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(106, 60, 181, 0.3);
+      max-width: 500px;
+    }
+    
+    .testimonial p {
+      font-style: italic;
+      font-size: 1rem;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .testimonial-author {
+      font-weight: 500;
+      color: var(--primary-light);
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      p {
+        font-size: 1rem;
+      }
+      
+      .cosmic-sphere {
+        width: 200px;
+        height: 200px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .cosmic-sphere {
+        width: 150px;
+        height: 150px;
+      }
+      
+      .cta-button {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  
+  <div class="cosmic-sphere top-right">
+    <div class="orb"></div>
+  </div>
+  
+  <div class="cosmic-sphere bottom-left">
+    <div class="orb"></div>
+  </div>
+
+  <div class="container">
+    <div class="logo">
+      <svg width="150" height="150" viewBox="0 0 200 200">
+        <defs>
+          <linearGradient id="logoGradient" gradientTransform="rotate(45)">
+            <stop offset="0%" stop-color="#9d4edd" />
+            <stop offset="100%" stop-color="#6a3cb5" />
+          </linearGradient>
+        </defs>
+        <circle cx="100" cy="100" r="90" fill="none" stroke="url(#logoGradient)" stroke-width="2" />
+        <path d="M50,100 Q100,50 150,100" fill="none" stroke="url(#logoGradient)" stroke-width="2" />
+        <path d="M50,120 Q100,170 150,120" fill="none" stroke="url(#logoGradient)" stroke-width="2" />
+        <circle cx="100" cy="100" r="15" fill="url(#logoGradient)" />
+        <circle cx="100" cy="100" r="5" fill="white" />
+      </svg>
+    </div>
+    
+    <h1>Discover Your AeonAnima</h1>
+    
+    <p>Unlock the deepest dimensions of your true self through our transformative assessment. Your AeonAnima awaits—a reflection of your inner resonance, ready to connect with kindred spirits.</p>
+    
+    <a href="/assessment/start">
+      <button class="cta-button">Begin Your Journey</button>
+    </a>
+    
+    <div class="testimonial">
+      <p>"My AeonAnima revealed aspects of myself I've always sensed but never fully understood. Finding others who resonate with my true nature has been transformative."</p>
+      <div class="testimonial-author">— Alex N., Early Explorer</div>
+    </div>
+  </div>
+  
+  <script>
+    // Create stars
+    const starsContainer = document.getElementById('stars');
+    const starCount = 100;
+    
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      
+      // Random size
+      const size = Math.random() * 3 + 1;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      
+      // Random position
+      const left = Math.random() * 100;
+      const top = Math.random() * 100;
+      star.style.left = `${left}%`;
+      star.style.top = `${top}%`;
+      
+      // Random delay for pulse animation
+      star.style.animationDelay = `${Math.random() * 3}s`;
+      
+      starsContainer.appendChild(star);
+    }
+  </script>
+</body>
+</html>

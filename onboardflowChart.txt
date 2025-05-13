@@ -1,0 +1,45 @@
+graph TD
+
+%% Entry Point
+A1[landing-page.html] --> A2[assessment-start.html]
+
+%% Assessment Pages
+A2 --> A3[assessment-page-1.html]
+A3 --> A4[assessment-page-2.html]
+A4 --> A5[assessment-page-3.html]
+A5 --> A6[assessment-page-4.html]
+A6 --> A7[assessment-page-5.html]
+
+%% Result Display
+A7 --> A8[results.html]
+A8 --> A9[result-aa-card.html]
+A9 --> A10[share.html]
+
+%% Register Flow
+A10 --> B1[register.html]
+
+%% Matchability Comparison
+B1 --> B2[result.matchabilityCompare.html]
+
+%% Alternate Result Routes
+B2 --> C1[user1.1stChoice.results.html]
+B2 --> C2[cj.results.html]
+
+%% Placeholder or Development
+A1 --> D1[coming-soon.html]
+
+====================
+
+graph TD
+
+A[1received.shared.aa-card.html] --> B[2received.shared.link.html]
+
+B --> C[3matchSample.html]
+C --> D[4assessment-start.html]
+D --> E[5.Sample.assessment-progress.html]
+E --> F[6results.card.html]
+F --> G[7results.html]
+G --> H[share.html]
+H --> I[result.matchabilityCompare.html]
+H --> J[I Ching Guidance (optional)]
+

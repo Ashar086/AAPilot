@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeonAnima - Assessment In Progress</title>
+  <style>
+    :root {
+      --primary-color: #6a3cb5;
+      --primary-light: #8a63d2;
+      --primary-dark: #4e2c87;
+      --secondary-color: #3498db;
+      --background: #121212;
+      --card-background: #1e1e1e;
+      --text-color: #e0e0e0;
+      --light-text: #aaaaaa;
+      --accent-color: #9d4edd;
+      
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+      
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2.5rem;
+      
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      
+      --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.7; }
+    }
+    
+    @keyframes orbit {
+      0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+    }
+    
+    @keyframes orbit2 {
+      0% { transform: rotate(45deg) translateX(100px) rotate(-45deg); }
+      100% { transform: rotate(405deg) translateX(100px) rotate(-405deg); }
+    }
+    
+    @keyframes orbit3 {
+      0% { transform: rotate(90deg) translateX(80px) rotate(-90deg); }
+      100% { transform: rotate(450deg) translateX(80px) rotate(-450deg); }
+    }
+    
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--text-color);
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0f1a, #1a1a2e, #2c1a4d, #38195a);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    
+    .question-container {
+      background: rgba(30, 30, 30, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(106, 60, 181, 0.3);
+      padding: var(--spacing-xl);
+      width: 100%;
+      margin-bottom: var(--spacing-xl);
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-header {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .progress-header h2 {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      margin-bottom: var(--spacing-xs);
+      color: var(--primary-light);
+    }
+    
+    .progress-header h3 {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--light-text);
+      font-weight: 400;
+    }
+    
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-xs);
+      font-size: 1rem;
+    }
+    
+    .progress-bar {
+      height: 10px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .progress-fill {
+      height: 100%;
+      width: 5%;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      border-radius: var(--radius-full);
+      transition: width 0.5s ease;
+    }
+    
+    .current-question {
+      margin: var(--spacing-xl) 0;
+      display: none;
+    }
+    
+    .current-question.active {
+      display: block;
+    }
+    
+    .question-number {
+      font-size: 0.9rem;
+      color: var(--light-text);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .question-text {
+      font-size: 1.3rem;
+      line-height: 1.5;
+      margin-bottom: var(--spacing-lg);
+      font-weight: 500;
+    }
+    
+    .answer-options {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .option {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    
+    .option:hover {
+      background: rgba(106, 60, 181, 0.2);
+      border-color: var(--primary-light);
+      transform: translateY(-2px);
+    }
+    
+    .option.selected {
+      background: rgba(106, 60, 181, 0.3);
+      border-color: var(--primary-color);
+    }
+    
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: var(--spacing-lg);
+    }
+    
+    .nav-button {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: var(--spacing-sm) var(--spacing-lg);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+    }
+    
+    .nav-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .nav-button.next {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .nav-button.next:hover {
+      background: var(--primary-light);
+    }
+    
+    .nav-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .nav-button:disabled:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: none;
+    }
+    
+    .nav-button.next:disabled:hover {
+      background: var(--primary-color);
+    }
+    
+    .nav-button#save {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-color);
+}
+
+.nav-button#save:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+    .insight-bubble {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(30, 30, 30, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md) var(--spacing-lg);
+      border: 1px solid rgba(106, 60, 181, 0.5);
+      max-width: 300px;
+      width: 90%;
+      box-shadow: var(--card-shadow);
+      z-index: 100;
+      text-align: center;
+      animation: fadeInOut 4s forwards;
+      display: none;
+    }
+    
+    .insight-bubble.active {
+      display: block;
+    }
+    
+    .insight-bubble h4 {
+      color: var(--primary-light);
+      margin-bottom: var(--spacing-xs);
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+    }
+    
+    .insight-bubble p {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    
+    .cosmic-core {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: var(--spacing-xl) 0;
+    }
+    
+    .core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at center, var(--primary-light), var(--primary-dark));
+      border-radius: 50%;
+      animation: pulse 3s infinite;
+      box-shadow: 0 0 30px var(--primary-light);
+    }
+    
+    .orbiting-element {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 15px white;
+    }
+    
+    .orbiting-element:nth-child(2) {
+      animation: orbit 9s linear infinite;
+      background: radial-gradient(circle at center, #c2a0e5, var(--primary-light));
+    }
+    
+    .orbiting-element:nth-child(3) {
+      width: 15px;
+      height: 15px;
+      animation: orbit2 7s linear infinite;
+      background: radial-gradient(circle at center, #9d4edd, var(--primary-color));
+    }
+    
+    .orbiting-element:nth-child(4) {
+      width: 12px;
+      height: 12px;
+      animation: orbit3 5s linear infinite;
+      background: radial-gradient(circle at center, #e0b0ff, #c2a0e5);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--spacing-md);
+      }
+      
+      .question-container {
+        padding: var(--spacing-lg);
+      }
+      
+      .question-text {
+        font-size: 1.1rem;
+      }
+      
+      .cosmic-core {
+        width: 200px;
+        height: 200px;
+      }
+      
+      .core {
+        width: 60px;
+        height: 60px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .question-container {
+        padding: var(--spacing-md);
+      }
+      
+      .progress-header h2 {
+        font-size: 1.4rem;
+      }
+      
+      .progress-header h3 {
+        font-size: 1rem;
+      }
+      
+      .question-text {
+        font-size: 1rem;
+      }
+      
+      .navigation {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+      
+      .nav-button {
+        width: 100%;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="question-container">
+      <div class="progress-header">
+        <h2>Discovering Your AeonAnima</h2>
+        <h3>Category III: Interests & Hobbies</h3>
+        <div class="progress-text">
+          <span id="question-counter">Question 41 of 100</span>
+          <span id="progress-percentage">41% Complete</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-bar-fill" style="width: 5%;"></div>
+        </div>
+        
+        <div class="insight-bubble" id="insight-bubble-1">
+          <h4>Assessment Insight</h4>
+          <p>Your leisure preferences reveal key resonance patterns.</p>
+        </div>
+        
+        <div class="insight-bubble" id="insight-bubble-7">
+          <h4>Assessment Insight</h4>
+          <p>Creative pursuits show your Entertainment Vibe alignment.</p>
+        </div>
+        
+        <div class="insight-bubble" id="insight-bubble-13">
+          <h4>Assessment Insight</h4>
+          <p>Your learning style is informing your Curiosity Type.</p>
+        </div>
+        
+        <div class="insight-bubble" id="insight-bubble-18">
+          <h4>Assessment Insight</h4>
+          <p>Social vs. solitary activities reveal Interaction Energy.</p>
+        </div>
+      </div>
+      
+      <!-- Question 41 -->
+      <div class="current-question" id="question-41" data-question-number="41">
+        <div class="question-number">Question 41</div>
+        <div class="question-text">Your ideal weekend most often involves:</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 41)">Socializing with friends, whether at gatherings or activities</div>
+          <div class="option" onclick="selectOption(this, 41)">Pursuing a personal hobby or passion project</div>
+          <div class="option" onclick="selectOption(this, 41)">Relaxing at home with entertainment or simple pleasures</div>
+          <div class="option" onclick="selectOption(this, 41)">Exploring new places, experiences, or adventures</div>
+          <div class="option" onclick="selectOption(this, 41)">A balanced mix of social time and personal space</div>
+        </div>
+      </div>
+      
+      <!-- Question 42 -->
+      <div class="current-question" id="question-42" data-question-number="42">
+        <div class="question-number">Question 42</div>
+        <div class="question-text">Which types of music do you find yourself drawn to most? (Choose what resonates strongest)</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 42)">Pop, dance, or contemporary hits with catchy melodies</div>
+          <div class="option" onclick="selectOption(this, 42)">Rock, alternative, or music with emotional intensity</div>
+          <div class="option" onclick="selectOption(this, 42)">Classical, jazz, or music with complex arrangements</div>
+          <div class="option" onclick="selectOption(this, 42)">Electronic, ambient, or experimental soundscapes</div>
+          <div class="option" onclick="selectOption(this, 42)">Folk, country, or music with authentic storytelling</div>
+        </div>
+      </div>
+      
+      <!-- Question 43 -->
+      <div class="current-question" id="question-43" data-question-number="43">
+        <div class="question-number">Question 43</div>
+        <div class="question-text">What genre of movies or TV shows do you typically prefer?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 43)">Comedy that brings laughter and lightness</div>
+          <div class="option" onclick="selectOption(this, 43)">Drama with complex characters and emotional depth</div>
+          <div class="option" onclick="selectOption(this, 43)">Action/Adventure with excitement and spectacle</div>
+          <div class="option" onclick="selectOption(this, 43)">Science Fiction or Fantasy with imaginative worlds</div>
+          <div class="option" onclick="selectOption(this, 43)">Documentaries or content that educates and informs</div>
+        </div>
+      </div>
+      
+      <!-- Question 44 -->
+      <div class="current-question" id="question-44" data-question-number="44">
+        <div class="question-number">Question 44</div>
+        <div class="question-text">Which of these activities brings you the most consistent enjoyment?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 44)">Reading books or articles that expand my mind</div>
+          <div class="option" onclick="selectOption(this, 44)">Physical activities like sports or outdoor adventures</div>
+          <div class="option" onclick="selectOption(this, 44)">Gaming, whether video games, board games, or puzzles</div>
+          <div class="option" onclick="selectOption(this, 44)">Creating through art, crafts, or other hands-on projects</div>
+          <div class="option" onclick="selectOption(this, 44)">Cooking, baking, or exploring culinary experiences</div>
+        </div>
+      </div>
+      
+      <!-- Question 45 -->
+      <div class="current-question" id="question-45" data-question-number="45">
+        <div class="question-number">Question 45</div>
+        <div class="question-text">When you travel, which type of destination do you prefer?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 45)">Vibrant cities with cultural attractions and energy</div>
+          <div class="option" onclick="selectOption(this, 45)">Natural landscapes like mountains, forests, or beaches</div>
+          <div class="option" onclick="selectOption(this, 45)">Historical sites with stories and significance</div>
+          <div class="option" onclick="selectOption(this, 45)">Relaxing resorts or retreats for comfort and leisure</div>
+          <div class="option" onclick="selectOption(this, 45)">Off-the-beaten-path locations with authentic experiences</div>
+        </div>
+      </div>
+      
+      <!-- Question 46 -->
+      <div class="current-question" id="question-46" data-question-number="46">
+        <div class="question-number">Question 46</div>
+        <div class="question-text">Which approach to sports or physical activities best describes you?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 46)">I enjoy team sports and the camaraderie they bring</div>
+          <div class="option" onclick="selectOption(this, 46)">I prefer individual sports where I can challenge myself</div>
+          <div class="option" onclick="selectOption(this, 46)">I'm drawn to outdoor activities connected to nature</div>
+          <div class="option" onclick="selectOption(this, 46)">I like structured fitness or training programs</div>
+          <div class="option" onclick="selectOption(this, 46)">I don't particularly enjoy sports or intense physical activity</div>
+        </div>
+      </div>
+      
+      <!-- Question 47 -->
+      <div class="current-question" id="question-47" data-question-number="47">
+        <div class="question-number">Question 47</div>
+        <div class="question-text">What types of books or reading material do you most enjoy?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 47)">Fiction that transports me to other worlds and perspectives</div>
+          <div class="option" onclick="selectOption(this, 47)">Non-fiction that teaches me facts and expands knowledge</div>
+          <div class="option" onclick="selectOption(this, 47)">Mystery, thriller, or suspense that keeps me engaged</div>
+          <div class="option" onclick="selectOption(this, 47)">Science fiction or fantasy with imaginative concepts</div>
+          <div class="option" onclick="selectOption(this, 47)">Poetry, philosophy, or writing with deeper meaning</div>
+        </div>
+      </div>
+      
+      <!-- Question 48 -->
+      <div class="current-question" id="question-48" data-question-number="48">
+        <div class="question-number">Question 48</div>
+        <div class="question-text">Which form of artistic expression do you most appreciate or connect with?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 48)">Visual arts like painting, drawing, or photography</div>
+          <div class="option" onclick="selectOption(this, 48)">Music, whether creating, performing, or listening</div>
+          <div class="option" onclick="selectOption(this, 48)">Three-dimensional arts like sculpture or architecture</div>
+          <div class="option" onclick="selectOption(this, 48)">Performance arts like theater, dance, or film</div>
+          <div class="option" onclick="selectOption(this, 48)">Literary arts including writing and storytelling</div>
+        </div>
+      </div>
+      
+      <!-- Question 49 -->
+      <div class="current-question" id="question-49" data-question-number="49">
+        <div class="question-number">Question 49</div>
+        <div class="question-text">How do you typically prefer to spend your free time?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 49)">With friends or family in social settings</div>
+          <div class="option" onclick="selectOption(this, 49)">Alone in peaceful solitude or personal projects</div>
+          <div class="option" onclick="selectOption(this, 49)">Learning something new or developing skills</div>
+          <div class="option" onclick="selectOption(this, 49)">Being creative or expressing myself artistically</div>
+          <div class="option" onclick="selectOption(this, 49)">Experiencing new adventures or activities</div>
+        </div>
+      </div>
+      
+      <!-- Question 50 -->
+      <div class="current-question" id="question-50" data-question-number="50">
+        <div class="question-number">Question 50</div>
+        <div class="question-text">Which of these topics do you find most intellectually stimulating?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 50)">Current events and developments in society</div>
+          <div class="option" onclick="selectOption(this, 50)">Science and technology advancements</div>
+          <div class="option" onclick="selectOption(this, 50)">Historical events and their context</div>
+          <div class="option" onclick="selectOption(this, 50)">Philosophical or existential questions</div>
+          <div class="option" onclick="selectOption(this, 50)">Psychology and understanding human behavior</div>
+        </div>
+      </div>
+      
+      <!-- Question 51 -->
+      <div class="current-question" id="question-51" data-question-number="51">
+        <div class="question-number">Question 51</div>
+        <div class="question-text">What kinds of games do you most enjoy?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 51)">Video games with immersive stories or worlds</div>
+          <div class="option" onclick="selectOption(this, 51)">Board games that bring people together</div>
+          <div class="option" onclick="selectOption(this, 51)">Card games with strategy and social elements</div>
+          <div class="option" onclick="selectOption(this, 51)">Puzzles and brain teasers that challenge the mind</div>
+          <div class="option" onclick="selectOption(this, 51)">I don't particularly enjoy games of any kind</div>
+        </div>
+      </div>
+      
+      <!-- Question 52 -->
+      <div class="current-question" id="question-52" data-question-number="52">
+        <div class="question-number">Question 52</div>
+        <div class="question-text">How would you describe your relationship with the outdoors?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 52)">I love spending time outdoors whenever possible</div>
+          <div class="option" onclick="selectOption(this, 52)">I enjoy nature occasionally but balance it with indoor time</div>
+          <div class="option" onclick="selectOption(this, 52)">I appreciate nature from a distance or in comfortable settings</div>
+          <div class="option" onclick="selectOption(this, 52)">I rarely choose outdoor activities over indoor ones</div>
+          <div class="option" onclick="selectOption(this, 52)">I prefer indoor environments most of the time</div>
+        </div>
+      </div>
+      
+      <!-- Question 53 -->
+      <div class="current-question" id="question-53" data-question-number="53">
+        <div class="question-number">Question 53</div>
+        <div class="question-text">Which approach to cooking or food most resonates with you?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 53)">I enjoy baking with its precision and sweet rewards</div>
+          <div class="option" onclick="selectOption(this, 53)">I prefer grilling or cooking over fire for flavor</div>
+          <div class="option" onclick="selectOption(this, 53)">I appreciate fine dining and culinary artistry</div>
+          <div class="option" onclick="selectOption(this, 53)">I like casual cooking for nourishment and comfort</div>
+          <div class="option" onclick="selectOption(this, 53)">I don't enjoy cooking and prefer other food options</div>
+        </div>
+      </div>
+      
+      <!-- Question 54 -->
+      <div class="current-question" id="question-54" data-question-number="54">
+        <div class="question-number">Question 54</div>
+        <div class="question-text">How would you describe your relationship with social media?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 54)">I use it frequently throughout the day to stay connected</div>
+          <div class="option" onclick="selectOption(this, 54)">I engage moderately, checking in at specific times</div>
+          <div class="option" onclick="selectOption(this, 54)">I use it minimally for specific purposes or connections</div>
+          <div class="option" onclick="selectOption(this, 54)">I rarely use social media or limit it intentionally</div>
+          <div class="option" onclick="selectOption(this, 54)">I avoid social media or don't have accounts</div>
+        </div>
+      </div>
+      
+      <!-- Question 55 -->
+      <div class="current-question" id="question-55" data-question-number="55">
+        <div class="question-number">Question 55</div>
+        <div class="question-text">Which type of DIY or hands-on activity appeals to you most?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 55)">Home improvement or building projects</div>
+          <div class="option" onclick="selectOption(this, 55)">Fixing or maintaining mechanical things</div>
+          <div class="option" onclick="selectOption(this, 55)">Creating arts and crafts</div>
+          <div class="option" onclick="selectOption(this, 55)">Gardening or plant care</div>
+          <div class="option" onclick="selectOption(this, 55)">None of these particularly appeal to me</div>
+        </div>
+      </div>
+      
+      <!-- Question 56 -->
+      <div class="current-question" id="question-56" data-question-number="56">
+        <div class="question-number">Question 56</div>
+        <div class="question-text">What type of live events do you most enjoy attending?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 56)">Music concerts or performances</div>
+          <div class="option" onclick="selectOption(this, 56)">Sporting events or competitions</div>
+          <div class="option" onclick="selectOption(this, 56)">Theater, dance, or artistic performances</div>
+          <div class="option" onclick="selectOption(this, 56)">Festivals, fairs, or cultural celebrations</div>
+          <div class="option" onclick="selectOption(this, 56)">I prefer to avoid large public events</div>
+        </div>
+      </div>
+      
+      <!-- Question 57 -->
+      <div class="current-question" id="question-57" data-question-number="57">
+        <div class="question-number">Question 57</div>
+        <div class="question-text">How would you characterize your approach to learning new things?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 57)">Structured and methodical, following proven systems</div>
+          <div class="option" onclick="selectOption(this, 57)">Hands-on and experimental, learning through doing</div>
+          <div class="option" onclick="selectOption(this, 57)">Self-directed and curiosity-driven exploration</div>
+          <div class="option" onclick="selectOption(this, 57)">Social learning through discussion and collaboration</div>
+          <div class="option" onclick="selectOption(this, 57)">Visual and observational, watching demonstrations first</div>
+        </div>
+      </div>
+      
+      <!-- Question 58 -->
+      <div class="current-question" id="question-58" data-question-number="58">
+        <div class="question-number">Question 58</div>
+        <div class="question-text">Which creative activity gives you the most satisfaction?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 58)">Writing stories, poetry, or other forms of expression</div>
+          <div class="option" onclick="selectOption(this, 58)">Visual art like painting, drawing, or digital design</div>
+          <div class="option" onclick="selectOption(this, 58)">Playing or creating music</div>
+          <div class="option" onclick="selectOption(this, 58)">Photography or capturing moments visually</div>
+          <div class="option" onclick="selectOption(this, 58)">I don't regularly engage in creative activities</div>
+        </div>
+      </div>
+      
+      <!-- Question 59 -->
+      <div class="current-question" id="question-59" data-question-number="59">
+        <div class="question-number">Question 59</div>
+        <div class="question-text">How important is staying updated with current events to you?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 59)">Very important - I follow news daily from multiple sources</div>
+          <div class="option" onclick="selectOption(this, 59)">Somewhat important - I check major headlines regularly</div>
+          <div class="option" onclick="selectOption(this, 59)">Moderately important - I focus on specific topics of interest</div>
+          <div class="option" onclick="selectOption(this, 59)">Not very important - I hear about major events eventually</div>
+          <div class="option" onclick="selectOption(this, 59)">Not important at all - I intentionally limit news consumption</div>
+        </div>
+      </div>
+      
+      <!-- Question 60 -->
+      <div class="current-question" id="question-60" data-question-number="60">
+        <div class="question-number">Question 60</div>
+        <div class="question-text">What type of audio content do you most enjoy listening to?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 60)">News, politics, or current affairs programming</div>
+          <div class="option" onclick="selectOption(this, 60)">Comedy or entertainment podcasts</div>
+          <div class="option" onclick="selectOption(this, 60)">Educational or informative content</div>
+          <div class="option" onclick="selectOption(this, 60)">Storytelling, fiction, or narrative podcasts</div>
+          <div class="option" onclick="selectOption(this, 60)">I don't regularly listen to podcasts or audio content</div>
+        </div>
+      </div>
+      
+      <div class="navigation">
+        <button class="nav-button" id="prev-button" onclick="previousQuestion()" disabled>Previous</button>
+        <button class="nav-button" id="save" onclick="save()">Save</button>
+        <button class="nav-button next" id="next-button" onclick="nextQuestion()" disabled>Next</button>
+      </div>
+    </div>
+    
+    <div class="cosmic-core">
+      <div class="core"></div>
+      <div class="orbiting-element"></div>
+      <div class="orbiting-element"></div>
+      <div class="orbiting-element"></div>
+    </div>
+  </div>
+  
+  <script>
+    let currentQuestion = 41;
+    const totalQuestions = 60;
+    const questionsPerPage = 20;
+    const totalAssessmentQuestions = 100;
+    
+    // Show the first question on load
+    document.addEventListener('DOMContentLoaded', function() {
+      showQuestion(currentQuestion);
+      updateProgress();
+      
+      // Show first insight after 5 seconds
+      setTimeout(() => {
+        document.getElementById('insight-bubble-1').classList.add('active');
+        
+        // Hide first insight after 4 seconds
+        setTimeout(() => {
+          document.getElementById('insight-bubble-1').classList.remove('active');
+        }, 4000);
+      }, 5000);
+    });
+    
+    function showQuestion(questionNumber) {
+      // Hide all questions
+      document.querySelectorAll('.current-question').forEach(question => {
+        question.classList.remove('active');
+      });
+      
+      // Show the current question
+      const questionElement = document.getElementById(`question-${questionNumber}`);
+      if (questionElement) {
+        questionElement.classList.add('active');
+      }
+      
+      // Reset Next button state
+      document.getElementById('next-button').disabled = true;
+      
+      // Update navigation buttons
+      document.getElementById('prev-button').disabled = questionNumber === 41;
+      
+      if (questionNumber === totalQuestions) {
+        document.getElementById('next-button').textContent = 'Continue to Next Page';
+        document.getElementById('next-button').onclick = function() {
+          if (!this.disabled) {
+            window.location.href = 'assessment-page-4.html';
+          }
+        };
+      } else {
+        document.getElementById('next-button').textContent = 'Next';
+        document.getElementById('next-button').onclick = function() {
+          if (!this.disabled) {
+            nextQuestion();
+          }
+        };
+      }
+      
+      // Show insights at specific questions
+      if (questionNumber === 47) {
+        document.getElementById('insight-bubble-7').classList.add('active');
+        setTimeout(() => {
+          document.getElementById('insight-bubble-7').classList.remove('active');
+        }, 4000);
+      } else if (questionNumber === 53) {
+        document.getElementById('insight-bubble-13').classList.add('active');
+        setTimeout(() => {
+          document.getElementById('insight-bubble-13').classList.remove('active');
+        }, 4000);
+      } else if (questionNumber === 58) {
+        document.getElementById('insight-bubble-18').classList.add('active');
+        setTimeout(() => {
+          document.getElementById('insight-bubble-18').classList.remove('active');
+        }, 4000);
+      }
+    }
+    
+    function selectOption(option, questionNumber) {
+      // Clear all selected options for this question
+      const questionElement = document.getElementById(`question-${questionNumber}`);
+      if (questionElement) {
+        questionElement.querySelectorAll('.option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+      }
+      
+      // Mark the clicked option as selected
+      option.classList.add('selected');
+      
+      // Enable the next button
+      document.getElementById('next-button').disabled = false;
+    }
+    
+    function nextQuestion() {
+      if (currentQuestion < totalQuestions) {
+        currentQuestion++;
+        showQuestion(currentQuestion);
+        updateProgress();
+      }
+    }
+    
+    function previousQuestion() {
+      if (currentQuestion > 41) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+        updateProgress();
+      }
+    }
+    
+    function updateProgress() {
+      // Calculate overall progress in the full assessment
+      const overallProgress = Math.floor((currentQuestion / totalAssessmentQuestions) * 100);
+      const pageProgress = Math.floor(((currentQuestion - 40) / questionsPerPage) * 100);
+      
+      // Update UI elements
+      document.getElementById('question-counter').textContent = `Question ${currentQuestion} of ${totalAssessmentQuestions}`;
+      document.getElementById('progress-percentage').textContent = `${overallProgress}% Complete`;
+      
+      // Make sure the progress bar element exists before updating it
+      const progressBarFill = document.getElementById('progress-bar-fill');
+      if (progressBarFill) {
+        progressBarFill.style.width = `${pageProgress}%`;
+      }
+    }
+
+function save() {
+  // Create an object to store the user's progress and answers
+  const savedData = {
+    currentQuestion: currentQuestion,
+    answers: {}
+  };
+  
+  // Collect all selected answers
+  document.querySelectorAll('.current-question').forEach(question => {
+    const questionNumber = question.dataset.questionNumber;
+    const selectedOption = question.querySelector('.option.selected');
+    
+    if (selectedOption) {
+      savedData.answers[questionNumber] = selectedOption.textContent;
+    }
+  });
+  
+  // Save to localStorage
+  localStorage.setItem('aeonAnimaAssessment', JSON.stringify(savedData));
+  
+  // Provide feedback to the user
+  alert('Your progress has been saved. You can continue later from this point.');
+}
+
+// Add this function to load saved data when the page loads
+function loadSavedData() {
+  const savedData = localStorage.getItem('aeonAnimaAssessment');
+  
+  if (savedData) {
+    const data = JSON.parse(savedData);
+    
+    // Set current question from saved data
+    if (data.currentQuestion >= 81 && data.currentQuestion <= 100) {
+      currentQuestion = data.currentQuestion;
+    }
+    
+    // Restore selected answers
+    if (data.answers) {
+      Object.keys(data.answers).forEach(questionNumber => {
+        const questionElement = document.getElementById(`question-${questionNumber}`);
+        if (questionElement) {
+          const options = questionElement.querySelectorAll('.option');
+          options.forEach(option => {
+            if (option.textContent === data.answers[questionNumber]) {
+              option.classList.add('selected');
+            }
+          });
+        }
+      });
+    }
+    
+    // Update the display
+    showQuestion(currentQuestion);
+    updateProgress();
+  }
+}
+
+// Modify the document.addEventListener to call loadSavedData
+document.addEventListener('DOMContentLoaded', function() {
+  // Load any saved data first
+  loadSavedData();
+  
+  // Then show the current question and update progress
+  showQuestion(currentQuestion);
+  updateProgress();
+  
+  // Show first insight after 5 seconds
+  setTimeout(() => {
+    document.getElementById('insight-bubble-1').classList.add('active');
+    
+    // Hide first insight after 4 seconds
+    setTimeout(() => {
+      document.getElementById('insight-bubble-1').classList.remove('active');
+    }, 4000);
+  }, 5000);
+});
+
+  </script>
+</body>
+</html>

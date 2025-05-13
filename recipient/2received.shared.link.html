@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeonAnima - Discover Your Resonance</title>
+  <style>
+    :root {
+      --primary-color: #6a3cb5;
+      --primary-light: #8a63d2;
+      --primary-dark: #4e2c87;
+      --secondary-color: #3498db;
+      --background: #121212;
+      --card-background: #1e1e1e;
+      --text-color: #e0e0e0;
+      --light-text: #aaaaaa;
+      --accent-color: #9d4edd;
+      
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+      
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2.5rem;
+      
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      
+      --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes reveal {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes glow {
+      0% { box-shadow: 0 0 10px rgba(157, 78, 221, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(157, 78, 221, 0.8); }
+      100% { box-shadow: 0 0 10px rgba(157, 78, 221, 0.5); }
+    }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--text-color);
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0f1a, #1a1a2e, #2c1a4d, #38195a);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .resonance-header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      animation: fadeIn 1s ease;
+    }
+    
+    .resonance-header h1 {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-md);
+      color: white;
+      text-shadow: var(--text-shadow);
+      background: linear-gradient(135deg, #c2a0e5, #9d4edd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .resonance-header p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+      animation-delay: 0.3s;
+    }
+    
+    .anima-card {
+      background: linear-gradient(135deg, rgba(30, 30, 30, 0.7), rgba(15, 15, 15, 0.9));
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(157, 78, 221, 0.3);
+      padding: var(--spacing-xl);
+      width: 100%;
+      max-width: 800px;
+      margin-bottom: var(--spacing-xl);
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      animation: reveal 1.5s ease forwards, glow 3s infinite;
+    }
+    
+    .card-header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      position: relative;
+    }
+    
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-light);
+    }
+    
+    .card-subtitle {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      color: var(--light-text);
+      font-weight: 400;
+    }
+    
+    .anima-avatar {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto var(--spacing-lg);
+      position: relative;
+    }
+    
+    .avatar-container {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      position: relative;
+      animation: reveal 2s ease;
+    }
+    
+    .cosmic-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #38195a, #4e2c87, #6a3cb5);
+    }
+    
+    .cosmic-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      mix-blend-mode: overlay;
+    }
+    
+    .avatar-patterns {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.7;
+    }
+    
+    .avatar-glow {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      width: calc(100% + 20px);
+      height: calc(100% + 20px);
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(157, 78, 221, 0.5), transparent 70%);
+      filter: blur(10px);
+      z-index: -1;
+    }
+    
+    .traits-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+    
+    .trait {
+      background: rgba(30, 30, 30, 0.6);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      border: 1px solid rgba(106, 60, 181, 0.2);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      animation: fadeIn 0.5s ease forwards;
+      animation-delay: calc(var(--i) * 0.15s);
+      opacity: 0;
+    }
+    
+    .trait:hover {
+      border-color: rgba(157, 78, 221, 0.6);
+      transform: translateY(-5px);
+      box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .trait-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .trait-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(106, 60, 181, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: var(--spacing-sm);
+      font-size: 1.2rem;
+    }
+    
+    .trait-title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      color: var(--primary-light);
+    }
+    
+    .trait-description {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-color);
+    }
+    
+    .trait-resonance {
+      font-size: 0.9rem;
+      color: var(--accent-color);
+      margin-top: var(--spacing-sm);
+      font-style: italic;
+    }
+    
+    .resonance-teaser {
+      background: rgba(30, 30, 30, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(106, 60, 181, 0.3);
+      padding: var(--spacing-lg);
+      width: 100%;
+      max-width: 800px;
+      margin-bottom: var(--spacing-xl);
+      animation: fadeIn 1s ease;
+    }
+    
+    .teaser-header {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      color: var(--primary-light);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .teaser-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text-color);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-md);
+      animation: fadeIn 1s ease;
+      animation-delay: 1.5s;
+      opacity: 0;
+      animation-fill-mode: forwards;
+    }
+    
+    .action-button {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: white;
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
+      min-width: 250px;
+      text-align: center;
+    }
+    
+    .action-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 20px rgba(157, 78, 221, 0.6);
+    }
+    
+    .action-button.secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--light-text);
+      box-shadow: none;
+    }
+    
+    .action-button.secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+    
+    .cosmic-pattern {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.1;
+    }
+    
+    .pattern-1 {
+      top: 20px;
+      right: 20px;
+      width: 200px;
+      height: 200px;
+    }
+    
+    .pattern-2 {
+      bottom: 20px;
+      left: 20px;
+      width: 150px;
+      height: 150px;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--spacing-md);
+      }
+      
+      .resonance-header h1 {
+        font-size: 2rem;
+      }
+      
+      .anima-card {
+        padding: var(--spacing-lg);
+      }
+      
+      .traits-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .card-title {
+        font-size: 1.5rem;
+      }
+      
+      .anima-avatar {
+        width: 120px;
+        height: 120px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .resonance-header h1 {
+        font-size: 1.75rem;
+      }
+      
+      .anima-card {
+        padding: var(--spacing-md);
+      }
+      
+      .actions {
+        width: 100%;
+      }
+      
+      .action-button {
+        width: 100%;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="resonance-header">
+      <h1>Explore Their AeonAnima</h1>
+      <p>A kindred spirit has shared their AeonAnima with you. Discover their inner resonance and unlock your compatibility by revealing your own Anima.</p>
+    </div>
+    
+    <div class="anima-card">
+      <!-- Cosmic patterns decoration -->
+      <svg class="cosmic-pattern pattern-1" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="80" fill="none" stroke="white" stroke-width="1" />
+        <circle cx="100" cy="100" r="60" fill="none" stroke="white" stroke-width="1" />
+        <circle cx="100" cy="100" r="40" fill="none" stroke="white" stroke-width="1" />
+        <line x1="20" y1="100" x2="180" y2="100" stroke="white" stroke-width="1" />
+        <line x1="100" y1="20" x2="100" y2="180" stroke="white" stroke-width="1" />
+      </svg>
+      
+      <svg class="cosmic-pattern pattern-2" viewBox="0 0 200 200">
+        <polygon points="100,10 40,180 190,60 10,60 160,180" fill="none" stroke="white" stroke-width="1" />
+        <circle cx="100" cy="100" r="50" fill="none" stroke="white" stroke-width="1" />
+      </svg>
+      
+      <div class="card-header">
+        <div class="anima-avatar">
+          <div class="avatar-container">
+            <div class="cosmic-bg"></div>
+            <svg class="avatar-patterns" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="1.5" stroke-opacity="0.3" />
+              <circle cx="50" cy="50" r="30" fill="none" stroke="white" stroke-width="1" stroke-opacity="0.5" />
+              <circle cx="50" cy="50" r="20" fill="none" stroke="white" stroke-width="0.5" stroke-opacity="0.7" />
+              <path d="M30,50 Q50,30 70,50" fill="none" stroke="white" stroke-width="1.5" stroke-opacity="0.6" />
+              <path d="M30,60 Q50,80 70,60" fill="none" stroke="white" stroke-width="1.5" stroke-opacity="0.6" />
+              <circle cx="50" cy="50" r="5" fill="white" fill-opacity="0.8" />
+            </svg>
+            <div class="cosmic-overlay"></div>
+          </div>
+          <div class="avatar-glow"></div>
+        </div>
+        
+<h2 class="card-title">Resonant Explorer</h2>
+<div class="card-subtitle">Harmonizer of Curiosity and Purpose</div>
+      </div>
+      
+      <div class="traits-container">
+
+<!-- Belief Resonance -->
+<div class="trait" style="--i:1;">
+  <div class="trait-header">
+    <div class="trait-icon">⚖️</div>
+    <div class="trait-title">Belief Resonance</div>
+  </div>
+  <div class="trait-description">
+    The adaptable thread connecting varied perspectives. You naturally flow between different worldviews, appreciating both traditional wisdom and innovative thinking. You connect most deeply with those who similarly balance reflection with lived experience, creating space for growth without abandoning core values.
+  </div>
+</div>
+
+<!-- Curiosity Pulse -->
+<div class="trait" style="--i:2;">
+  <div class="trait-header">
+    <div class="trait-icon">🧠</div>
+    <div class="trait-title">Curiosity Pulse</div>
+  </div>
+  <div class="trait-description">
+    The vibrant energy of your ever-present wonder. Your curiosity shines brightly, drawing in those who share your genuine enthusiasm for discovery. You naturally attract fellow explorers who appreciate how you transform ordinary moments into opportunities for learning and delight through thoughtful questions and authentic interest.
+  </div>
+</div>
+
+<!-- Romantic Magnetism -->
+<div class="trait" style="--i:3;">
+  <div class="trait-header">
+    <div class="trait-icon">💫</div>
+    <div class="trait-title">Romantic Magnetism</div>
+  </div>
+  <div class="trait-description">
+    The warm authenticity that draws others toward your emotional truth. Your romantic presence is magnetic without being performative—you connect through genuine expression rather than calculation. You naturally attract those who value how you bring full-hearted attention to relationships, creating bonds with depth and lasting warmth.
+  </div>
+</div>
+
+<!-- Emotional Climate -->
+<div class="trait" style="--i:4;">
+  <div class="trait-header">
+    <div class="trait-icon">💓</div>
+    <div class="trait-title">Emotional Climate</div>
+  </div>
+  <div class="trait-description">
+    The gentle adaptability of your emotional landscape. You neither suppress nor overwhelm with feelings, instead flowing between expression and reflection as needed. You connect most harmoniously with those who similarly balance emotional openness with thoughtful restraint, creating relationships that weather life's changes with resilience.
+  </div>
+</div>
+
+<!-- Conflict Flow -->
+<div class="trait" style="--i:5;">
+  <div class="trait-header">
+    <div class="trait-icon">🔍</div>
+    <div class="trait-title">Conflict Flow</div>
+  </div>
+  <div class="trait-description">
+    The thoughtful grace you bring to life's tensions. You approach conflict neither seeking nor avoiding it, but treating it as a natural part of meaningful connection. You attract those who similarly value both peace and truth, working through difficulties with patience rather than either aggressive confrontation or passive avoidance.
+  </div>
+</div>
+
+<!-- Life Tempo -->
+<div class="trait" style="--i:6;">
+  <div class="trait-header">
+    <div class="trait-icon">⚡</div>
+    <div class="trait-title">Life Tempo</div>
+  </div>
+  <div class="trait-description">
+    The adaptable rhythm of your life's journey. You naturally modulate between periods of energetic pursuit and reflective patience, never firmly fixed in either extreme. You resonate with companions who similarly appreciate both the sprint and the stroll, creating harmony through flexible pacing rather than rigid schedules.
+  </div>
+</div>
+
+<!-- Pragmatic Rhythm -->
+<div class="trait" style="--i:7;">
+  <div class="trait-header">
+    <div class="trait-icon">🎪</div>
+    <div class="trait-title">Pragmatic Rhythm</div>
+  </div>
+  <div class="trait-description">
+    The balanced approach you bring to life's practicalities. You move fluidly between structured planning and spontaneous adaptation, appreciating both without being trapped by either. You connect with those who similarly balance dream-building with adaptability, creating partnerships that remain both grounded and flexible through life's changing demands.
+  </div>
+</div>
+
+<!-- Soul Frequency -->
+<div class="trait" style="--i:8;">
+  <div class="trait-header">
+    <div class="trait-icon">🎭</div>
+    <div class="trait-title">Soul Frequency</div>
+  </div>
+  <div class="trait-description">
+    The clear, resonant purpose that guides your journey. Your inner compass points strongly toward meaning, creating a distinct soul signature that others can sense and trust. You naturally attract those who recognize and respond to your authentic presence, forming connections that feel both purposeful and sacred in their mutual recognition.
+  </div>
+</div>
+</div></div>
+
+    
+    <div class="actions">
+      <a href="3matchSample.html" class="action-button">Show a Sample Matchability Analysis</a>
+      <a href="4assessment-start.html" class="action-button">Discover Your AeonAnima</a>
+    </div>
+  </div>
+  
+  <script>
+    // Show traits with staggered animation
+    document.addEventListener('DOMContentLoaded', function() {
+      const traits = document.querySelectorAll('.trait');
+      traits.forEach((trait, index) => {
+        trait.style.setProperty('--i', index + 1);
+      });
+    });
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9334f36fac5253f8',t:'MTc0NTE1NTM1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

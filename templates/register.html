@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Save Your AeonAnima - Registration</title>
+  <style>
+    :root {
+      --primary-color: #6a3cb5;
+      --primary-light: #8a63d2;
+      --primary-dark: #4e2c87;
+      --secondary-color: #3498db;
+      --background: #121212;
+      --card-background: #1e1e1e;
+      --text-color: #e0e0e0;
+      --light-text: #aaaaaa;
+      --accent-color: #9d4edd;
+      
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+      
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2.5rem;
+      
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      
+      --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes glow {
+      0% { box-shadow: 0 0 15px rgba(106, 60, 181, 0.5); }
+      50% { box-shadow: 0 0 25px rgba(106, 60, 181, 0.8); }
+      100% { box-shadow: 0 0 15px rgba(106, 60, 181, 0.5); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    body {
+      font-family: var(--font-body);
+      background-color: #141023;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(106, 60, 181, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(157, 78, 221, 0.1) 0%, transparent 40%);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-md);
+    }
+    
+    .register-container {
+      width: 100%;
+      max-width: 500px;
+      animation: fadeIn 0.8s ease forwards;
+    }
+    
+    .register-card {
+      background: var(--card-background);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(106, 60, 181, 0.3);
+      animation: glow 4s infinite;
+    }
+    
+    .card-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 0 20px rgba(106, 60, 181, 0.4);
+    }
+    
+    .register-title {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-light);
+    }
+    
+    .register-subtitle {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      color: var(--light-text);
+      font-size: 1.1rem;
+    }
+    
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-color);
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      color: var(--text-color);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 2px rgba(106, 60, 181, 0.3);
+    }
+    
+    .feature-list {
+      list-style: none;
+      margin: var(--spacing-xl) 0;
+    }
+    
+    .feature-item {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+    }
+    
+    .feature-icon {
+      color: var(--primary-light);
+      margin-right: var(--spacing-sm);
+      font-size: 0.8rem;
+    }
+    
+    .register-button {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: white;
+      border: none;
+      border-radius: var(--radius-full);
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(106, 60, 181, 0.4);
+    }
+    
+    .register-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 20px rgba(106, 60, 181, 0.6);
+    }
+    
+    .success-message {
+      text-align: center;
+      padding: var(--spacing-lg);
+      display: none;
+    }
+    
+    .success-message svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .success-message h3 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      color: var(--primary-light);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .success-message p {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .skip-link {
+      text-align: center;
+      margin-top: var(--spacing-lg);
+    }
+    
+    .skip-link a {
+      color: var(--light-text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    
+    .skip-link a:hover {
+      color: var(--text-color);
+      text-decoration: underline;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="register-container">
+    <div class="register-card">
+      <div class="card-glow"></div>
+      
+      <h1 class="register-title">Save Your AeonAnima</h1>
+      <p class="register-subtitle">Register to unlock your full resonance potential</p>
+      
+      <form id="register-form">
+        <div class="form-group">
+          <label for="name" class="form-label">Your Name</label>
+          <input type="text" id="name" name="name" class="form-input" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address</label>
+          <input type="email" id="email" name="email" class="form-input" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="password" class="form-label">Create Password</label>
+          <input type="password" id="password" name="password" class="form-input" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="verification" class="form-label">Verification Code (4 digits)</label>
+          <input type="text" id="verification" name="verification" class="form-input" pattern="[0-9]{4}" maxlength="4" required placeholder="Enter 4-digit code">
+          <div style="display: flex; justify-content: space-between; margin-top: var(--spacing-xs);">
+            <small style="color: var(--light-text);">Enter the 4-digit code sent to your device</small>
+            <a href="#" id="resend-code" style="color: var(--primary-light); text-decoration: none; font-size: 0.9rem;">Resend Code</a>
+          </div>
+        </div>
+        
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">✦</span>
+            Track your AeonAnima evolution over time
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✦</span>
+            Compare resonance patterns with friends
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✦</span>
+            Access your full traits analysis anywhere
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✦</span>
+            Discover compatible souls in the AeonAnima Network
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✦</span>
+            Early access to new AeonAnima features
+          </li>
+        </ul>
+        
+        <button type="submit" class="register-button">Register & Save AeonAnima</button>
+      </form>
+      
+      <div class="success-message" id="success-message">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#8a63d2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <h3>Registration Complete!</h3>
+        <p>Your AeonAnima has been saved. We've sent a confirmation email to you.</p>
+        <a href="share.html" class="register-button">Share Your AeonAnima</a>
+      </div>
+    </div>
+    
+    <div class="skip-link">
+      <a href="results.html">Skip registration and view your AeonAnima ›</a>
+    </div>
+  </div>
+  
+  <script>
+    // Simulated verification code
+    const verificationCode = "1234"; // This would be generated and sent to the user in a real implementation
+    
+    // Handle resend code action
+    document.getElementById('resend-code').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Display confirmation message
+      const codeField = document.getElementById('verification');
+      codeField.value = "";
+      
+      // Show a temporary message
+      const smallText = this.previousElementSibling;
+      const originalText = smallText.textContent;
+      smallText.textContent = "New code sent!";
+      smallText.style.color = "#8a63d2";
+      
+      // Reset the message after 3 seconds
+      setTimeout(() => {
+        smallText.textContent = originalText;
+        smallText.style.color = "";
+      }, 3000);
+    });
+    
+    // Form submission handler
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get entered verification code
+      const enteredCode = document.getElementById('verification').value;
+      
+      // In a real implementation, you would validate the code against what was sent
+      // For demo purposes, we'll check against our simulated code
+      if (enteredCode === verificationCode) {
+        // Code is correct - proceed with registration
+        const form = document.getElementById('register-form');
+        const successMessage = document.getElementById('success-message');
+        
+        // Hide form and show success message
+        form.style.display = 'none';
+        successMessage.style.display = 'block';
+        
+        // In a real implementation, you would send the form data to your server here
+        console.log('Form submitted successfully');
+      } else {
+        // Code is incorrect - show error
+        const verificationField = document.getElementById('verification');
+        verificationField.setCustomValidity("Incorrect verification code");
+        verificationField.reportValidity();
+        
+        // Reset the custom validity after a moment
+        setTimeout(() => {
+          verificationField.setCustomValidity("");
+        }, 3000);
+      }
+    });
+  </script>
+</body>
+</html>

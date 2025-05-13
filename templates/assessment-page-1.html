@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeonAnima - Assessment In Progress</title>
+  <style>
+    :root {
+      --primary-color: #6a3cb5;
+      --primary-light: #8a63d2;
+      --primary-dark: #4e2c87;
+      --secondary-color: #3498db;
+      --background: #121212;
+      --card-background: #1e1e1e;
+      --text-color: #e0e0e0;
+      --light-text: #aaaaaa;
+      --accent-color: #9d4edd;
+      
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+      
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2.5rem;
+      
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      
+      --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.7; }
+    }
+    
+    @keyframes orbit {
+      0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+    }
+    
+    @keyframes orbit2 {
+      0% { transform: rotate(45deg) translateX(100px) rotate(-45deg); }
+      100% { transform: rotate(405deg) translateX(100px) rotate(-405deg); }
+    }
+    
+    @keyframes orbit3 {
+      0% { transform: rotate(90deg) translateX(80px) rotate(-90deg); }
+      100% { transform: rotate(450deg) translateX(80px) rotate(-450deg); }
+    }
+    
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--text-color);
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0f1a, #1a1a2e, #2c1a4d, #38195a);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    
+    .question-container {
+      background: rgba(30, 30, 30, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(106, 60, 181, 0.3);
+      padding: var(--spacing-xl);
+      width: 100%;
+      margin-bottom: var(--spacing-xl);
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-header {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .progress-header h2 {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      margin-bottom: var(--spacing-xs);
+      color: var(--primary-light);
+    }
+    
+    .progress-header h3 {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--light-text);
+      font-weight: 400;
+    }
+    
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-xs);
+      font-size: 1rem;
+    }
+    
+    .progress-bar {
+      height: 10px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      border-radius: var(--radius-full);
+      transition: width 0.5s ease;
+    }
+    
+    .current-question {
+      margin: var(--spacing-xl) 0;
+      display: none;
+    }
+    
+    .current-question.active {
+      display: block;
+    }
+    
+    .question-number {
+      font-size: 0.9rem;
+      color: var(--light-text);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .question-text {
+      font-size: 1.3rem;
+      line-height: 1.5;
+      margin-bottom: var(--spacing-lg);
+      font-weight: 500;
+    }
+    
+    .answer-options {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .option {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    
+    .option:hover {
+      background: rgba(106, 60, 181, 0.2);
+      border-color: var(--primary-light);
+      transform: translateY(-2px);
+    }
+    
+    .option.selected {
+      background: rgba(106, 60, 181, 0.3);
+      border-color: var(--primary-color);
+    }
+    
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: var(--spacing-lg);
+    }
+    
+    .nav-button {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: var(--spacing-sm) var(--spacing-lg);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+    }
+    
+    .nav-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .nav-button.next {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .nav-button.next:hover {
+      background: var(--primary-light);
+    }
+    
+    .nav-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .nav-button:disabled:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: none;
+    }
+    
+    .nav-button.next:disabled:hover {
+      background: var(--primary-color);
+    }
+
+    .nav-button#save {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-color);
+}
+
+.nav-button#save:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+    .insight-bubble {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(30, 30, 30, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      border: 1px solid rgba(106, 60, 181, 0.5);
+      max-width: 320px;
+      width: 90%;
+      box-shadow: var(--card-shadow);
+      z-index: 100;
+      text-align: left;
+      animation: fadeInOut 8s forwards;
+      display: none;
+    }
+    
+    .insight-bubble.active {
+      display: block;
+    }
+    
+    .insight-bubble h4 {
+      color: var(--primary-light);
+      margin-bottom: var(--spacing-xs);
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+    }
+    
+    .insight-bubble p {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    
+    .cosmic-core {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: var(--spacing-xl) 0;
+    }
+    
+    .core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at center, var(--primary-light), var(--primary-dark));
+      border-radius: 50%;
+      animation: pulse 3s infinite;
+      box-shadow: 0 0 30px var(--primary-light);
+    }
+    
+    .orbiting-element {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 15px white;
+    }
+    
+    .orbiting-element:nth-child(2) {
+      animation: orbit 9s linear infinite;
+      background: radial-gradient(circle at center, #c2a0e5, var(--primary-light));
+    }
+    
+    .orbiting-element:nth-child(3) {
+      width: 15px;
+      height: 15px;
+      animation: orbit2 7s linear infinite;
+      background: radial-gradient(circle at center, #9d4edd, var(--primary-color));
+    }
+    
+    .orbiting-element:nth-child(4) {
+      width: 12px;
+      height: 12px;
+      animation: orbit3 5s linear infinite;
+      background: radial-gradient(circle at center, #e0b0ff, #c2a0e5);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--spacing-md);
+      }
+      
+      .question-container {
+        padding: var(--spacing-lg);
+      }
+      
+      .question-text {
+        font-size: 1.1rem;
+      }
+      
+      .cosmic-core {
+        width: 200px;
+        height: 200px;
+      }
+      
+      .core {
+        width: 60px;
+        height: 60px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .question-container {
+        padding: var(--spacing-md);
+      }
+      
+      .progress-header h2 {
+        font-size: 1.4rem;
+      }
+      
+      .progress-header h3 {
+        font-size: 1rem;
+      }
+      
+      .question-text {
+        font-size: 1rem;
+      }
+      
+      .navigation {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+      
+      .nav-button {
+        width: 100%;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="question-container">
+      <div class="progress-header">
+        <h2>Discovering Your AeonAnima</h2>
+        <h3>Category I: Personality & Values</h3>
+        <div class="progress-text">
+          <span id="question-counter">Question 1 of 100</span>
+          <span id="progress-percentage">1% Complete</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-bar-fill"></div>
+        </div>
+        
+        <div class="insight-bubble" id="insight-bubble-1">
+          <h4>Assessment Insight</h4>
+          <p>Your responses are beginning to reveal your natural energy patterns and how you interact with the world around you.</p>
+        </div>
+        
+        <div class="insight-bubble" id="insight-bubble-7">
+          <h4>Assessment Insight</h4>
+          <p>We're detecting interesting patterns in how you approach leadership and collaboration in group settings.</p>
+        </div>
+        
+        <div class="insight-bubble" id="insight-bubble-13">
+          <h4>Assessment Insight</h4>
+          <p>Your responses indicate unique patterns in how your core values shape your worldview and decision-making.</p>
+        </div>
+        
+        <div class="insight-bubble" id="insight-bubble-18">
+          <h4>Assessment Insight</h4>
+          <p>The assessment is mapping how your sense of humor and self-expression contribute to your Tone Compatibility.</p>
+        </div>
+      </div>
+      
+      <!-- Question 1 -->
+      <div class="current-question" id="question-1" data-question-number="1">
+        <div class="question-number">Question 1</div>
+        <div class="question-text">Which of these best describes your general energy level in day-to-day life?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 1)">I'm highly energetic and enthusiastic, often the most animated person in the room</div>
+          <div class="option" onclick="selectOption(this, 1)">I have good energy and maintain steady enthusiasm throughout most days</div>
+          <div class="option" onclick="selectOption(this, 1)">I'm generally calm and measured, with occasional bursts of higher energy</div>
+          <div class="option" onclick="selectOption(this, 1)">I prefer a relaxed, low-key approach to most situations</div>
+          <div class="option" onclick="selectOption(this, 1)">I'm typically quiet and reserved, conserving my energy for what matters most</div>
+        </div>
+      </div>
+      
+      <!-- Question 2 -->
+      <div class="current-question" id="question-2" data-question-number="2">
+        <div class="question-number">Question 2</div>
+        <div class="question-text">When faced with a difficult decision, how do you typically approach it?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 2)">I often act quickly based on initial impressions and instincts</div>
+          <div class="option" onclick="selectOption(this, 2)">I methodically analyze all available information before deciding</div>
+          <div class="option" onclick="selectOption(this, 2)">I trust my intuition and inner guidance even if I can't explain why</div>
+          <div class="option" onclick="selectOption(this, 2)">I carefully weigh pros and cons while considering potential outcomes</div>
+          <div class="option" onclick="selectOption(this, 2)">I seek advice from trusted others before making significant decisions</div>
+        </div>
+      </div>
+      
+      <!-- Question 3 -->
+      <div class="current-question" id="question-3" data-question-number="3">
+        <div class="question-number">Question 3</div>
+        <div class="question-text">In social situations with new people, you usually:</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 3)">Initiate conversations and introduce yourself to strangers with ease</div>
+          <div class="option" onclick="selectOption(this, 3)">Actively participate once someone else breaks the ice</div>
+          <div class="option" onclick="selectOption(this, 3)">Observe quietly at first, then engage when you feel comfortable</div>
+          <div class="option" onclick="selectOption(this, 3)">Connect deeply with one or two people rather than circulating widely</div>
+          <div class="option" onclick="selectOption(this, 3)">Feel most comfortable on the periphery, processing the social dynamics</div>
+        </div>
+      </div>
+      
+      <!-- Question 4 -->
+      <div class="current-question" id="question-4" data-question-number="4">
+        <div class="question-number">Question 4</div>
+        <div class="question-text">Which of these is most important to you in your daily life?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 4)">Setting and achieving meaningful goals that propel me forward</div>
+          <div class="option" onclick="selectOption(this, 4)">Creating and maintaining harmony in my relationships</div>
+          <div class="option" onclick="selectOption(this, 4)">Having freedom to express myself authentically</div>
+          <div class="option" onclick="selectOption(this, 4)">Learning new things and expanding my understanding</div>
+          <div class="option" onclick="selectOption(this, 4)">Finding peace and contentment in the present moment</div>
+        </div>
+      </div>
+      
+      <!-- Question 5 -->
+      <div class="current-question" id="question-5" data-question-number="5">
+        <div class="question-number">Question 5</div>
+        <div class="question-text">How do you typically respond when receiving criticism?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 5)">I may initially feel defensive but try to hide my reaction</div>
+          <div class="option" onclick="selectOption(this, 5)">I listen attentively and look for valuable insights to improve</div>
+          <div class="option" onclick="selectOption(this, 5)">I tend to dismiss criticism that doesn't align with my self-perception</div>
+          <div class="option" onclick="selectOption(this, 5)">I analyze it objectively, accepting what's useful and discarding what isn't</div>
+          <div class="option" onclick="selectOption(this, 5)">I appreciate honest feedback but need time to process strong criticism</div>
+        </div>
+      </div>
+      
+      <!-- Question 6 -->
+      <div class="current-question" id="question-6" data-question-number="6">
+        <div class="question-number">Question 6</div>
+        <div class="question-text">In terms of organization and planning, you consider yourself:</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 6)">Highly structured with detailed plans and systems for everything</div>
+          <div class="option" onclick="selectOption(this, 6)">Generally organized with good planning for important matters</div>
+          <div class="option" onclick="selectOption(this, 6)">A mix of organized in some areas but flexible in others</div>
+          <div class="option" onclick="selectOption(this, 6)">Mostly spontaneous but capable of organization when necessary</div>
+          <div class="option" onclick="selectOption(this, 6)">Preferring to go with the flow and adapt to circumstances as they arise</div>
+        </div>
+      </div>
+      
+      <!-- Question 7 -->
+      <div class="current-question" id="question-7" data-question-number="7">
+        <div class="question-number">Question 7</div>
+        <div class="question-text">When working on a team project, you prefer to:</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 7)">Take the lead and coordinate others' efforts toward the goal</div>
+          <div class="option" onclick="selectOption(this, 7)">Contribute actively with ideas while respecting the group dynamic</div>
+          <div class="option" onclick="selectOption(this, 7)">Support others and help maintain a positive collaborative atmosphere</div>
+          <div class="option" onclick="selectOption(this, 7)">Focus on completing your assigned portion with excellence</div>
+          <div class="option" onclick="selectOption(this, 7)">Provide unique perspectives that others might not consider</div>
+        </div>
+      </div>
+      
+      <!-- Question 8 -->
+      <div class="current-question" id="question-8" data-question-number="8">
+        <div class="question-number">Question 8</div>
+        <div class="question-text">Which of these values is most fundamental to how you live your life?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 8)">Honesty and integrity in all interactions</div>
+          <div class="option" onclick="selectOption(this, 8)">Compassion and kindness toward others</div>
+          <div class="option" onclick="selectOption(this, 8)">Personal freedom and independence</div>
+          <div class="option" onclick="selectOption(this, 8)">Achievement and making a meaningful impact</div>
+          <div class="option" onclick="selectOption(this, 8)">Growth and continuous self-improvement</div>
+        </div>
+      </div>
+      
+      <!-- Question 9 -->
+      <div class="current-question" id="question-9" data-question-number="9">
+        <div class="question-number">Question 9</div>
+        <div class="question-text">When facing significant stress, what is your typical coping mechanism?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 9)">I confront the source of stress directly to resolve it</div>
+          <div class="option" onclick="selectOption(this, 9)">I reach out to friends or family for support and perspective</div>
+          <div class="option" onclick="selectOption(this, 9)">I take time alone to recharge and avoid additional stressors</div>
+          <div class="option" onclick="selectOption(this, 9)">I analyze the situation to develop a strategic response</div>
+          <div class="option" onclick="selectOption(this, 9)">I engage in physical activity or creative outlets to release tension</div>
+        </div>
+      </div>
+      
+      <!-- Question 10 -->
+      <div class="current-question" id="question-10" data-question-number="10">
+        <div class="question-number">Question 10</div>
+        <div class="question-text">Others would most likely describe your personality as:</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 10)">Outgoing and socially confident in most situations</div>
+          <div class="option" onclick="selectOption(this, 10)">Warm and approachable with a wide circle of acquaintances</div>
+          <div class="option" onclick="selectOption(this, 10)">Thoughtful and contemplative with meaningful insights</div>
+          <div class="option" onclick="selectOption(this, 10)">Independent and self-sufficient with clear boundaries</div>
+          <div class="option" onclick="selectOption(this, 10)">Adaptable and versatile, changing based on the situation</div>
+        </div>
+      </div>
+      
+      <!-- Question 11 -->
+      <div class="current-question" id="question-11" data-question-number="11">
+        <div class="question-number">Question 11</div>
+        <div class="question-text">When it comes to trying new experiences or activities, you are:</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 11)">Enthusiastically first in line to try something new and different</div>
+          <div class="option" onclick="selectOption(this, 11)">Generally open to new experiences after some consideration</div>
+          <div class="option" onclick="selectOption(this, 11)">Cautiously interested but prefer to observe others first</div>
+          <div class="option" onclick="selectOption(this, 11)">Selective about which new experiences are worth pursuing</div>
+          <div class="option" onclick="selectOption(this, 11)">Most comfortable with familiar activities and established routines</div>
+        </div>
+      </div>
+      
+      <!-- Question 12 -->
+      <div class="current-question" id="question-12" data-question-number="12">
+        <div class="question-number">Question 12</div>
+        <div class="question-text">During a disagreement with someone, you typically:</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 12)">Stand firmly for what you believe is right regardless of opposition</div>
+          <div class="option" onclick="selectOption(this, 12)">Look for middle ground that acknowledges both perspectives</div>
+          <div class="option" onclick="selectOption(this, 12)">Try to maintain relationship harmony even if it means conceding</div>
+          <div class="option" onclick="selectOption(this, 12)">Analyze the disagreement logically to find the most accurate view</div>
+          <div class="option" onclick="selectOption(this, 12)">Ask questions to better understand the other person's position</div>
+        </div>
+      </div>
+      
+      <!-- Question 13 -->
+      <div class="current-question" id="question-13" data-question-number="13">
+        <div class="question-number">Question 13</div>
+        <div class="question-text">Which statement about life priorities resonates more deeply with you?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 13)">The journey of growth and exploration is more valuable than reaching specific destinations</div>
+          <div class="option" onclick="selectOption(this, 13)">Achieving important outcomes sometimes requires difficult choices and sacrifices</div>
+          <div class="option" onclick="selectOption(this, 13)">Living authentically according to your values matters more than external achievements</div>
+          <div class="option" onclick="selectOption(this, 13)">Building meaningful connections with others is life's greatest purpose</div>
+          <div class="option" onclick="selectOption(this, 13)">Finding balance and harmony across all aspects of life creates true fulfillment</div>
+        </div>
+      </div>
+      
+      <!-- Question 14 -->
+      <div class="current-question" id="question-14" data-question-number="14">
+        <div class="question-number">Question 14</div>
+        <div class="question-text">How important is it for you to be correct or right in conversations and decisions?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 14)">Very important - I pride myself on accuracy and correct judgments</div>
+          <div class="option" onclick="selectOption(this, 14)">Somewhat important - I value being right but can admit when I'm wrong</div>
+          <div class="option" onclick="selectOption(this, 14)">Moderately important - being right matters in some contexts but not all</div>
+          <div class="option" onclick="selectOption(this, 14)">Not very important - I'm comfortable with uncertainty and multiple perspectives</div>
+          <div class="option" onclick="selectOption(this, 14)">Not important at all - I'm focused on learning rather than being right</div>
+        </div>
+      </div>
+      
+      <!-- Question 15 -->
+      <div class="current-question" id="question-15" data-question-number="15">
+        <div class="question-number">Question 15</div>
+        <div class="question-text">In your approach to life, you would primarily describe yourself as:</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 15)">A realist who sees things as they are without embellishment</div>
+          <div class="option" onclick="selectOption(this, 15)">An optimist who sees potential and opportunity in most situations</div>
+          <div class="option" onclick="selectOption(this, 15)">A pragmatist who focuses on practical solutions and outcomes</div>
+          <div class="option" onclick="selectOption(this, 15)">An idealist who envisions how things could and should be</div>
+          <div class="option" onclick="selectOption(this, 15)">A skeptic who questions assumptions until proven with evidence</div>
+        </div>
+      </div>
+      
+      <!-- Question 16 -->
+      <div class="current-question" id="question-16" data-question-number="16">
+        <div class="question-number">Question 16</div>
+        <div class="question-text">How quickly do you typically adapt to new situations or changes in your environment?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 16)">Very quickly - I thrive on change and adapt almost immediately</div>
+          <div class="option" onclick="selectOption(this, 16)">Relatively quickly - I adjust well after a brief adjustment period</div>
+          <div class="option" onclick="selectOption(this, 16)">Moderately - I need some time but eventually adapt successfully</div>
+          <div class="option" onclick="selectOption(this, 16)">Somewhat slowly - I prefer gradual transitions when possible</div>
+          <div class="option" onclick="selectOption(this, 16)">With difficulty - I find significant changes quite challenging</div>
+        </div>
+      </div>
+      
+      <!-- Question 17 -->
+      <div class="current-question" id="question-17" data-question-number="17">
+        <div class="question-number">Question 17</div>
+        <div class="question-text">When making a significant purchase, which factor typically guides your decision most?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 17)">Practicality and functionality - how useful it will be</div>
+          <div class="option" onclick="selectOption(this, 17)">Quality and durability - how long it will last</div>
+          <div class="option" onclick="selectOption(this, 17)">Aesthetic appeal and design - how it looks and feels</div>
+          <div class="option" onclick="selectOption(this, 17)">Value and cost-effectiveness - the balance of price and benefit</div>
+          <div class="option" onclick="selectOption(this, 17)">Ethical considerations - how it aligns with your values</div>
+        </div>
+      </div>
+      
+      <!-- Question 18 -->
+      <div class="current-question" id="question-18" data-question-number="18">
+        <div class="question-number">Question 18</div>
+        <div class="question-text">How would you characterize your sense of humor?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 18)">Outlandish and playful - enjoying absurdity and unexpected connections</div>
+          <div class="option" onclick="selectOption(this, 18)">Witty and clever - appreciating wordplay and intellectual humor</div>
+          <div class="option" onclick="selectOption(this, 18)">Dry and subtle - preferring understated humor that might be missed by some</div>
+          <div class="option" onclick="selectOption(this, 18)">Sarcastic and ironic - finding humor in pointing out contradictions</div>
+          <div class="option" onclick="selectOption(this, 18)">Warm and lighthearted - enjoying inclusive humor that brings people together</div>
+        </div>
+      </div>
+      
+      <!-- Question 19 -->
+      <div class="current-question" id="question-19" data-question-number="19">
+        <div class="question-number">Question 19</div>
+        <div class="question-text">How comfortable are you with speaking in front of groups?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 19)">Very comfortable - I enjoy the spotlight and communicate confidently</div>
+          <div class="option" onclick="selectOption(this, 19)">Somewhat comfortable - I can present well when prepared</div>
+          <div class="option" onclick="selectOption(this, 19)">Neutral - I don't seek it out but can manage when necessary</div>
+          <div class="option" onclick="selectOption(this, 19)">Uncomfortable - I feel anxious but push through when required</div>
+          <div class="option" onclick="selectOption(this, 19)">Very uncomfortable - I avoid public speaking whenever possible</div>
+        </div>
+      </div>
+      
+      <!-- Question 20 -->
+      <div class="current-question" id="question-20" data-question-number="20">
+        <div class="question-number">Question 20</div>
+        <div class="question-text">Which quality do you value most in your closest friendships?</div>
+        
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 20)">Loyalty and reliability - being there through difficulties</div>
+          <div class="option" onclick="selectOption(this, 20)">Shared interests and activities - enjoying time together</div>
+          <div class="option" onclick="selectOption(this, 20)">Deep conversation and intellectual connection</div>
+          <div class="option" onclick="selectOption(this, 20)">Humor and the ability to have fun together</div>
+          <div class="option" onclick="selectOption(this, 20)">Mutual understanding and emotional support</div>
+        </div>
+      </div>
+      
+      <div class="navigation">
+        <button class="nav-button" id="prev-button" onclick="previousQuestion()" disabled>Previous</button>
+        <button class="nav-button" id="save" onclick="save()">Save</button>
+        <button class="nav-button next" id="next-button" onclick="nextQuestion()" disabled>Next</button>
+      </div>
+    </div>
+    
+    <div class="cosmic-core">
+      <div class="core"></div>
+      <div class="orbiting-element"></div>
+      <div class="orbiting-element"></div>
+      <div class="orbiting-element"></div>
+    </div>
+  </div>
+  
+  <script>
+    let currentQuestion = 1;
+    const totalQuestions = 20;
+    const totalAssessmentQuestions = 100;
+    let userId = localStorage.getItem('aeonAnimaUserId') || `user_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Save userId if it's new
+    if (!localStorage.getItem('aeonAnimaUserId')) {
+        localStorage.setItem('aeonAnimaUserId', userId);
+    }
+    
+    // Show the first question on load
+    document.addEventListener('DOMContentLoaded', function() {
+      showQuestion(currentQuestion);
+      updateProgress();
+      
+      // Show first insight after 5 seconds
+      setTimeout(() => {
+        document.getElementById('insight-bubble-1').classList.add('active');
+        
+        // Hide first insight after 8 seconds
+        setTimeout(() => {
+          document.getElementById('insight-bubble-1').classList.remove('active');
+        }, 8000);
+      }, 5000);
+    });
+    
+    function showQuestion(questionNumber) {
+      // Hide all questions
+      document.querySelectorAll('.current-question').forEach(question => {
+        question.classList.remove('active');
+      });
+      
+      // Show the current question
+      const questionElement = document.getElementById(`question-${questionNumber}`);
+      if (questionElement) {
+        questionElement.classList.add('active');
+      }
+      
+      // Reset Next button state
+      document.getElementById('next-button').disabled = true;
+      
+      // Update navigation buttons
+      document.getElementById('prev-button').disabled = questionNumber === 1;
+      
+      if (questionNumber === totalQuestions) {
+        document.getElementById('next-button').textContent = 'Continue to Next Page';
+        document.getElementById('next-button').onclick = function() {
+          if (!this.disabled) {
+            window.location.href = '/assessment/page/2';
+          }
+        };
+      } else {
+        document.getElementById('next-button').textContent = 'Next';
+        document.getElementById('next-button').onclick = function() {
+          if (!this.disabled) {
+            nextQuestion();
+          }
+        };
+      }
+      
+      // Show insights at specific questions
+      if (questionNumber === 7) {
+        document.getElementById('insight-bubble-7').classList.add('active');
+        setTimeout(() => {
+          document.getElementById('insight-bubble-7').classList.remove('active');
+        }, 8000);
+      } else if (questionNumber === 13) {
+        document.getElementById('insight-bubble-13').classList.add('active');
+        setTimeout(() => {
+          document.getElementById('insight-bubble-13').classList.remove('active');
+        }, 8000);
+      } else if (questionNumber === 18) {
+        document.getElementById('insight-bubble-18').classList.add('active');
+        setTimeout(() => {
+          document.getElementById('insight-bubble-18').classList.remove('active');
+        }, 8000);
+      }
+    }
+    
+    function selectOption(option, questionNumber) {
+      // Clear all selected options for this question
+      const questionElement = document.getElementById(`question-${questionNumber}`);
+      if (questionElement) {
+        questionElement.querySelectorAll('.option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+      }
+      
+      // Mark the clicked option as selected
+      option.classList.add('selected');
+      
+      // Enable the next button
+      document.getElementById('next-button').disabled = false;
+    }
+    
+    function nextQuestion() {
+      if (currentQuestion < totalQuestions) {
+        currentQuestion++;
+        showQuestion(currentQuestion);
+        updateProgress();
+      }
+    }
+    
+    function previousQuestion() {
+      if (currentQuestion > 1) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+        updateProgress();
+      }
+    }
+    
+    function updateProgress() {
+      // Calculate overall progress in the full assessment
+      const overallProgress = Math.floor((currentQuestion / totalAssessmentQuestions) * 100);
+      const pageProgress = Math.floor((currentQuestion / totalQuestions) * 100);
+      
+      // Update UI elements
+      document.getElementById('question-counter').textContent = `Question ${currentQuestion} of ${totalAssessmentQuestions}`;
+      document.getElementById('progress-percentage').textContent = `${overallProgress}% Complete`;
+      document.getElementById('progress-bar-fill').style.width = `${pageProgress}%`;
+    }
+
+async function save() {
+  // Create an object to store the user's progress and answers
+  const savedData = {
+    userId: userId,
+    pageNumber: 1,
+    answers: {}
+  };
+  
+  // Collect all selected answers
+  document.querySelectorAll('.current-question').forEach(question => {
+    const questionNumber = question.dataset.questionNumber;
+    const selectedOption = question.querySelector('.option.selected');
+    
+    if (selectedOption) {
+      savedData.answers[questionNumber] = selectedOption.textContent;
+    }
+  });
+  
+  try {
+    // Save to backend
+    const response = await fetch('/aa/answers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(savedData)
+    });
+
+    if (response.ok) {
+      // Save to localStorage as backup
+      localStorage.setItem('aeonAnimaAssessment', JSON.stringify(savedData));
+      alert('Your progress has been saved successfully!');
+    } else {
+      throw new Error('Failed to save to server');
+    }
+  } catch (error) {
+    console.error('Error saving data:', error);
+    // Fallback to localStorage if server save fails
+    localStorage.setItem('aeonAnimaAssessment', JSON.stringify(savedData));
+    alert('Could not save to server, but your progress is saved locally. Please check your internet connection.');
+  }
+}
+
+// Add this function to load saved data when the page loads
+async function loadSavedData() {
+  try {
+    // First try to load from server
+    const response = await fetch(`/aa/results/${userId}`);
+    if (response.ok) {
+      const serverData = await response.json();
+      if (serverData.pages && serverData.pages[1]) { // Check page 1 data
+        restoreAnswers(serverData.pages[1].answers);
+        return;
+      }
+    }
+  } catch (error) {
+    console.error('Error loading from server:', error);
+  }
+
+  // Fallback to localStorage if server load fails
+  const savedData = localStorage.getItem('aeonAnimaAssessment');
+  if (savedData) {
+    const data = JSON.parse(savedData);
+    if (data.answers) {
+      restoreAnswers(data.answers);
+    }
+  }
+}
+
+function restoreAnswers(answers) {
+  // Restore selected answers
+  Object.keys(answers).forEach(questionNumber => {
+    const questionElement = document.getElementById(`question-${questionNumber}`);
+    if (questionElement) {
+      const options = questionElement.querySelectorAll('.option');
+      options.forEach(option => {
+        if (option.textContent === answers[questionNumber]) {
+          option.classList.add('selected');
+        }
+      });
+    }
+  });
+
+  // Update the display
+  showQuestion(currentQuestion);
+  updateProgress();
+}
+
+// Modify the document.addEventListener to call loadSavedData
+document.addEventListener('DOMContentLoaded', function() {
+  // Load any saved data first
+  loadSavedData();
+  
+  // Then show the current question and update progress
+  showQuestion(currentQuestion);
+  updateProgress();
+  
+  // Show first insight after 5 seconds
+  setTimeout(() => {
+    document.getElementById('insight-bubble-1').classList.add('active');
+    
+    // Hide first insight after 4 seconds
+    setTimeout(() => {
+      document.getElementById('insight-bubble-1').classList.remove('active');
+    }, 4000);
+  }, 5000);
+});
+
+  </script>
+</body>
+</html>

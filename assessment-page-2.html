@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeonAnima - Assessment In Progress</title>
+  <style>
+    :root {
+      --primary-color: #6a3cb5;
+      --primary-light: #ad63d2;
+      --primary-dark: #4e2c87;
+      --secondary-color: #3498db;
+      --background: #121212;
+      --card-background: #1e1e1e;
+      --text-color: #e0e0e0;
+      --light-text: #aaaaaa;
+      --accent-color: #9d4edd;
+      
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+      
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2.5rem;
+      
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      
+      --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.7; }
+    }
+    
+    @keyframes orbit {
+      0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+    }
+    
+    @keyframes orbit2 {
+      0% { transform: rotate(45deg) translateX(100px) rotate(-45deg); }
+      100% { transform: rotate(405deg) translateX(100px) rotate(-405deg); }
+    }
+    
+    @keyframes orbit3 {
+      0% { transform: rotate(90deg) translateX(80px) rotate(-90deg); }
+      100% { transform: rotate(450deg) translateX(80px) rotate(-450deg); }
+    }
+    
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--text-color);
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0f1a, #1a1a2e, #2c1a4d, #38195a);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    
+    .question-container {
+      background: rgba(30, 30, 30, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(106, 60, 181, 0.3);
+      padding: var(--spacing-xl);
+      width: 100%;
+      margin-bottom: var(--spacing-xl);
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-header {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .progress-header h2 {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      margin-bottom: var(--spacing-xs);
+      color: var(--primary-light);
+    }
+    
+    .progress-header h3 {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--light-text);
+      font-weight: 400;
+    }
+    
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-xs);
+      font-size: 1rem;
+    }
+    
+    .progress-bar {
+      height: 10px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      border-radius: var(--radius-full);
+      transition: width 0.5s ease;
+    }
+    
+    .current-question {
+      margin: var(--spacing-xl) 0;
+      display: none;
+    }
+    
+    .current-question.active {
+      display: block;
+    }
+    
+    .question-number {
+      font-size: 0.9rem;
+      color: var(--light-text);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .question-text {
+      font-size: 1.3rem;
+      line-height: 1.5;
+      margin-bottom: var(--spacing-lg);
+      font-weight: 500;
+    }
+    
+    .answer-options {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .option {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    
+    .option:hover {
+      background: rgba(106, 60, 181, 0.2);
+      border-color: var(--primary-light);
+      transform: translateY(-2px);
+    }
+    
+    .option.selected {
+      background: rgba(106, 60, 181, 0.3);
+      border-color: var(--primary-color);
+    }
+    
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: var(--spacing-lg);
+    }
+    
+    .nav-button {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: var(--spacing-sm) var(--spacing-lg);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+    }
+    
+    .nav-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .nav-button.next {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .nav-button.next:hover {
+      background: var(--primary-light);
+    }
+    
+    .nav-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .nav-button:disabled:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: none;
+    }
+    
+    .nav-button.next:disabled:hover {
+      background: var(--primary-color);
+    }
+    
+  .nav-button#save {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-color);
+}
+
+.nav-button#save:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+	
+    .insight-bubble {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(30, 30, 30, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md) var(--spacing-lg);
+      border: 1px solid rgba(106, 60, 181, 0.5);
+      max-width: 300px;
+      width: 90%;
+      box-shadow: var(--card-shadow);
+      z-index: 100;
+      text-align: center;
+      animation: fadeInOut 4s forwards;
+      display: none;
+    }
+    
+    .insight-bubble.active {
+      display: block;
+    }
+    
+    .insight-bubble h4 {
+      color: var(--primary-light);
+      margin-bottom: var(--spacing-xs);
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+    }
+    
+    .insight-bubble p {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    
+    .cosmic-core {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: var(--spacing-xl) 0;
+    }
+    
+    .core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at center, var(--primary-light), var(--primary-dark));
+      border-radius: 50%;
+      animation: pulse 3s infinite;
+      box-shadow: 0 0 30px var(--primary-light);
+    }
+    
+    .orbiting-element {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 15px white;
+    }
+    
+    .orbiting-element:nth-child(2) {
+      animation: orbit 9s linear infinite;
+      background: radial-gradient(circle at center, #c2a0e5, var(--primary-light));
+    }
+    
+    .orbiting-element:nth-child(3) {
+      width: 15px;
+      height: 15px;
+      animation: orbit2 7s linear infinite;
+      background: radial-gradient(circle at center, #9d4edd, var(--primary-color));
+    }
+    
+    .orbiting-element:nth-child(4) {
+      width: 12px;
+      height: 12px;
+      animation: orbit3 5s linear infinite;
+      background: radial-gradient(circle at center, #e0b0ff, #c2a0e5);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--spacing-md);
+      }
+      
+      .question-container {
+        padding: var(--spacing-lg);
+      }
+      
+      .question-text {
+        font-size: 1.1rem;
+      }
+      
+      .cosmic-core {
+        width: 200px;
+        height: 200px;
+      }
+      
+      .core {
+        width: 60px;
+        height: 60px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .question-container {
+        padding: var(--spacing-md);
+      }
+      
+      .progress-header h2 {
+        font-size: 1.4rem;
+      }
+      
+      .progress-header h3 {
+        font-size: 1rem;
+      }
+      
+      .question-text {
+        font-size: 1rem;
+      }
+      
+      .navigation {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+      
+      .nav-button {
+        width: 100%;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="question-container">
+      <div class="progress-header">
+        <h2>Discovering Your AeonAnima</h2>
+        <h3>Category II: Communication Style</h3>
+        <div class="progress-text">
+          <span id="question-counter">Question 21 of 100</span>
+          <span id="progress-percentage">21% Complete</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- Question 21 -->
+      <div class="current-question" id="question-21" data-question-number="21">
+        <div class="question-number">Question 21</div>
+        <div class="question-text">How would you describe your approach to starting a conversation?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 21)">I dive in confidently and set the tone quickly.</div>
+          <div class="option" onclick="selectOption(this, 21)">I ease in with friendly small talk to build rapport.</div>
+          <div class="option" onclick="selectOption(this, 21)">I wait for the right moment to contribute meaningfully.</div>
+          <div class="option" onclick="selectOption(this, 21)">I adapt my approach based on the other person’s energy.</div>
+          <div class="option" onclick="selectOption(this, 21)">I prefer others to initiate and follow their lead.</div>
+        </div>
+      </div>
+
+      <!-- Question 22 -->
+      <div class="current-question" id="question-22" data-question-number="22">
+        <div class="question-number">Question 22</div>
+        <div class="question-text">When writing emails or messages, how do you structure your communication?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 22)">Concise and to the point, focusing on key information.</div>
+          <div class="option" onclick="selectOption(this, 22)">Warm and engaging, with a personal touch.</div>
+          <div class="option" onclick="selectOption(this, 22)">Detailed and organized, covering all relevant points.</div>
+          <div class="option" onclick="selectOption(this, 22)">Creative and expressive, with vivid language.</div>
+          <div class="option" onclick="selectOption(this, 22)">Tailored to the recipient’s preferences and context.</div>
+        </div>
+      </div>
+
+      <!-- Question 23 -->
+      <div class="current-question" id="question-23" data-question-number="23">
+        <div class="question-number">Question 23</div>
+        <div class="question-text">How do you prefer to clarify misunderstandings during a discussion?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 23)">Ask direct questions to address the confusion immediately.</div>
+          <div class="option" onclick="selectOption(this, 23)">Rephrase my points to ensure clarity.</div>
+          <div class="option" onclick="selectOption(this, 23)">Listen carefully and summarize the other person’s perspective.</div>
+          <div class="option" onclick="selectOption(this, 23)">Use examples or analogies to bridge the gap.</div>
+          <div class="option" onclick="selectOption(this, 23)">Take a step back and revisit the topic later.</div>
+        </div>
+      </div>
+
+      <!-- Question 24 -->
+      <div class="current-question" id="question-24" data-question-number="24">
+        <div class="question-number">Question 24</div>
+        <div class="question-text">How often do you use gestures or facial expressions to emphasize your points?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 24)">Very often – they’re integral to my communication.</div>
+          <div class="option" onclick="selectOption(this, 24)">Frequently – they add energy to my message.</div>
+          <div class="option" onclick="selectOption(this, 24)">Occasionally – when I feel it enhances understanding.</div>
+          <div class="option" onclick="selectOption(this, 24)">Rarely – I rely mostly on my words.</div>
+          <div class="option" onclick="selectOption(this, 24)">It depends on the setting and audience.</div>
+        </div>
+      </div>
+
+      <!-- Question 25 -->
+      <div class="current-question" id="question-25" data-question-number="25">
+        <div class="question-number">Question 25</div>
+        <div class="question-text">How do you typically respond to someone sharing exciting news?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 25)">Match their enthusiasm with energetic responses.</div>
+          <div class="option" onclick="selectOption(this, 25)">Offer warm congratulations and ask follow-up questions.</div>
+          <div class="option" onclick="selectOption(this, 25)">Respond calmly but show genuine interest.</div>
+          <div class="option" onclick="selectOption(this, 25)">Acknowledge briefly and move on to other topics.</div>
+          <div class="option" onclick="selectOption(this, 25)">Adjust my response based on their personality.</div>
+        </div>
+      </div>
+
+      <!-- Question 26 -->
+      <div class="current-question" id="question-26" data-question-number="26">
+        <div class="question-number">Question 26</div>
+        <div class="question-text">When receiving constructive feedback, how do you usually react?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 26)">Listen attentively and ask for specific examples.</div>
+          <div class="option" onclick="selectOption(this, 26)">Reflect quietly and process it before responding.</div>
+          <div class="option" onclick="selectOption(this, 26)">Engage in a dialogue to understand their perspective.</div>
+          <div class="option" onclick="selectOption(this, 26)">Accept it politely but prefer to evaluate it later.</div>
+          <div class="option" onclick="selectOption(this, 26)">Feel defensive but try to stay open-minded.</div>
+        </div>
+      </div>
+
+      <!-- Question 27 -->
+      <div class="current-question" id="question-27" data-question-number="27">
+        <div class="question-number">Question 27</div>
+        <div class="question-text">In a group discussion, how do you contribute?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 27)">Lead the conversation and keep it on track.</div>
+          <div class="option" onclick="selectOption(this, 27)">Share ideas actively and encourage others to join.</div>
+          <div class="option" onclick="selectOption(this, 27)">Listen first, then offer thoughtful insights.</div>
+          <div class="option" onclick="selectOption(this, 27)">Speak only when I have something unique to add.</div>
+          <div class="option" onclick="selectOption(this, 27)">Vary my involvement based on the group’s dynamics.</div>
+        </div>
+      </div>
+
+      <!-- Question 28 -->
+      <div class="current-question" id="question-28" data-question-number="28">
+        <div class="question-number">Question 28</div>
+        <div class="question-text">How comfortable are you with public speaking or presenting?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 28)">Very comfortable – I thrive in the spotlight.</div>
+          <div class="option" onclick="selectOption(this, 28)">Somewhat comfortable – I prepare thoroughly to feel confident.</div>
+          <div class="option" onclick="selectOption(this, 28)">Neutral – I can do it but don’t seek it out.</div>
+          <div class="option" onclick="selectOption(this, 28)">Somewhat uncomfortable – it feels challenging but manageable.</div>
+          <div class="option" onclick="selectOption(this, 28)">Very uncomfortable – I avoid it whenever possible.</div>
+        </div>
+      </div>
+
+      <!-- Question 29 -->
+      <div class="current-question" id="question-29" data-question-number="29">
+        <div class="question-number">Question 29</div>
+        <div class="question-text">How do you handle interruptions during a conversation?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 29)">Politely redirect the conversation back to my point.</div>
+          <div class="option" onclick="selectOption(this, 29)">Pause and let the other person finish before continuing.</div>
+          <div class="option" onclick="selectOption(this, 29)">Adapt and incorporate their input into the discussion.</div>
+          <div class="option" onclick="selectOption(this, 29)">Feel frustrated but try to stay composed.</div>
+          <div class="option" onclick="selectOption(this, 29)">Respond differently depending on the situation.</div>
+        </div>
+      </div>
+
+      <!-- Question 30 -->
+      <div class="current-question" id="question-30" data-question-number="30">
+        <div class="question-number">Question 30</div>
+        <div class="question-text">How often do you use storytelling to convey ideas?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 30)">Frequently – stories make ideas memorable.</div>
+          <div class="option" onclick="selectOption(this, 30)">Regularly – when they suit the context.</div>
+          <div class="option" onclick="selectOption(this, 30)">Occasionally – for specific topics or audiences.</div>
+          <div class="option" onclick="selectOption(this, 30)">Rarely – I prefer straightforward explanations.</div>
+          <div class="option" onclick="selectOption(this, 30)">Only when I know it will resonate with the listener.</div>
+        </div>
+      </div>
+
+      <!-- Question 31 -->
+      <div class="current-question" id="question-31" data-question-number="31">
+        <div class="question-number">Question 31</div>
+        <div class="question-text">How would you describe your listening style in conversations?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 31)">Fully focused, absorbing every detail.</div>
+          <div class="option" onclick="selectOption(this, 31)">Engaged, but I also think about my response.</div>
+          <div class="option" onclick="selectOption(this, 31)">Attentive, especially to emotional cues.</div>
+          <div class="option" onclick="selectOption(this, 31)">Selective, focusing on key points.</div>
+          <div class="option" onclick="selectOption(this, 31)">Varies depending on the speaker and topic.</div>
+        </div>
+      </div>
+
+      <!-- Question 32 -->
+      <div class="current-question" id="question-32" data-question-number="32">
+        <div class="question-number">Question 32</div>
+        <div class="question-text">When communicating in a professional setting, your tone is typically:</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 32)">Formal and precise, maintaining professionalism.</div>
+          <div class="option" onclick="selectOption(this, 32)">Friendly and approachable, fostering collaboration.</div>
+          <div class="option" onclick="selectOption(this, 32)">Calm and measured, projecting confidence.</div>
+          <div class="option" onclick="selectOption(this, 32)">Direct and efficient, focusing on results.</div>
+          <div class="option" onclick="selectOption(this, 32)">Adjusted to match the workplace culture.</div>
+        </div>
+      </div>
+
+      <!-- Question 33 -->
+      <div class="current-question" id="question-33" data-question-number="33">
+        <div class="question-number">Question 33</div>
+        <div class="question-text">How do you approach giving advice to others?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 33)">Offer clear, actionable suggestions with confidence.</div>
+          <div class="option" onclick="selectOption(this, 33)">Share insights gently, encouraging their input.</div>
+          <div class="option" onclick="selectOption(this, 33)">Provide advice only when asked, focusing on their needs.</div>
+          <div class="option" onclick="selectOption(this, 33)">Use examples from my experience to guide them.</div>
+          <div class="option" onclick="selectOption(this, 33)">Tailor my approach to their personality and situation.</div>
+        </div>
+      </div>
+
+      <!-- Question 34 -->
+      <div class="current-question" id="question-34" data-question-number="34">
+        <div class="question-number">Question 34</div>
+        <div class="question-text">How often do you check for understanding when explaining something?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 34)">Always – I ask questions to confirm clarity.</div>
+          <div class="option" onclick="selectOption(this, 34)">Often – I pause to gauge their reactions.</div>
+          <div class="option" onclick="selectOption(this, 34)">Sometimes – when I sense confusion.</div>
+          <div class="option" onclick="selectOption(this, 34)">Rarely – I assume they’ll ask if needed.</div>
+          <div class="option" onclick="selectOption(this, 34)">Depends on the complexity of the topic.</div>
+        </div>
+      </div>
+
+      <!-- Question 35 -->
+      <div class="current-question" id="question-35" data-question-number="35">
+        <div class="question-number">Question 35</div>
+        <div class="question-text">How do you express disagreement in a conversation?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 35)">State my view directly with supporting reasons.</div>
+          <div class="option" onclick="selectOption(this, 35)">Ask questions to explore their perspective first.</div>
+          <div class="option" onclick="selectOption(this, 35)">Find common ground before sharing my opinion.</div>
+          <div class="option" onclick="selectOption(this, 35)">Express my view diplomatically to avoid conflict.</div>
+          <div class="option" onclick="selectOption(this, 35)">Assess whether it’s worth voicing my disagreement.</div>
+        </div>
+      </div>
+
+      <!-- Question 36 -->
+      <div class="current-question" id="question-36" data-question-number="36">
+        <div class="question-number">Question 36</div>
+        <div class="question-text">How do you adapt your communication when speaking to someone from a different cultural background?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 36)">Use clear, universal language to avoid misunderstandings.</div>
+          <div class="option" onclick="selectOption(this, 36)">Learn about their culture to connect better.</div>
+          <div class="option" onclick="selectOption(this, 36)">Observe their cues and adjust my style accordingly.</div>
+          <div class="option" onclick="selectOption(this, 36)">Keep my style consistent but stay respectful.</div>
+          <div class="option" onclick="selectOption(this, 36)">Rely on non-verbal communication to bridge gaps.</div>
+        </div>
+      </div>
+
+      <!-- Question 37 -->
+      <div class="current-question" id="question-37" data-question-number="37">
+        <div class="question-number">Question 37</div>
+        <div class="question-text">How comfortable are you with pausing to think before responding in a conversation?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 37)">Very comfortable – it helps me respond thoughtfully.</div>
+          <div class="option" onclick="selectOption(this, 37)">Somewhat comfortable – I don’t mind brief pauses.</div>
+          <div class="option" onclick="selectOption(this, 37)">Neutral – it depends on the conversation’s flow.</div>
+          <div class="option" onclick="selectOption(this, 37)">Somewhat uncomfortable – I prefer quick responses.</div>
+          <div class="option" onclick="selectOption(this, 37)">Very uncomfortable – I feel pressure to respond fast.</div>
+        </div>
+      </div>
+
+      <!-- Question 38 -->
+      <div class="current-question" id="question-38" data-question-number="38">
+        <div class="question-number">Question 38</div>
+        <div class="question-text">When persuading someone, what approach do you take?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 38)">Use logical arguments backed by facts and data.</div>
+          <div class="option" onclick="selectOption(this, 38)">Appeal to their emotions and values.</div>
+          <div class="option" onclick="selectOption(this, 38)">Share relatable stories or examples.</div>
+          <div class="option" onclick="selectOption(this, 38)">Build trust and find mutual benefits.</div>
+          <div class="option" onclick="selectOption(this, 38)">Combine approaches based on their preferences.</div>
+        </div>
+      </div>
+
+      <!-- Question 39 -->
+      <div class="current-question" id="question-39" data-question-number="39">
+        <div class="question-number">Question 39</div>
+        <div class="question-text">How often do you use humor to lighten a conversation?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 39)">Very often – it’s a key part of my style.</div>
+          <div class="option" onclick="selectOption(this, 39)">Frequently – it helps build rapport.</div>
+          <div class="option" onclick="selectOption(this, 39)">Occasionally – when it feels appropriate.</div>
+          <div class="option" onclick="selectOption(this, 39)">Rarely – I focus on the conversation’s purpose.</div>
+          <div class="option" onclick="selectOption(this, 39)">Only with people who appreciate humor.</div>
+        </div>
+      </div>
+
+      <!-- Question 40 -->
+      <div class="current-question" id="question-40" data-question-number="40">
+        <div class="question-number">Question 40</div>
+        <div class="question-text">How do you prefer to resolve conflicts in communication?</div>
+        <div class="answer-options">
+          <div class="option" onclick="selectOption(this, 40)">Address the issue directly and seek a solution.</div>
+          <div class="option" onclick="selectOption(this, 40)">Listen to their side and find a compromise.</div>
+          <div class="option" onclick="selectOption(this, 40)">Stay calm and focus on de-escalating tension.</div>
+          <div class="option" onclick="selectOption(this, 40)">Reflect on the issue before discussing it.</div>
+          <div class="option" onclick="selectOption(this, 40)">Adapt my approach based on the conflict’s nature.</div>
+        </div>
+      </div>
+
+      <div class="navigation">
+        <button class="nav-button" id="prev-button" onclick="previousQuestion()" disabled>Previous</button>
+        <button class="nav-button" id="save" onclick="save()">Save</button>
+        <button class="nav-button next" id="next-button" onclick="nextQuestion()" disabled>Next</button>
+      </div>
+    </div>
+
+    <div class="cosmic-core">
+      <div class="core"></div>
+      <div class="orbiting-element"></div>
+      <div class="orbiting-element"></div>
+      <div class="orbiting-element"></div>
+    </div>
+  </div>
+
+  <!-- Insight Bubbles -->
+  <div class="insight-bubble" id="insight-bubble-1">
+    <h4>Assessment Insight</h4>
+    <p>Analyzing your communication patterns...</p>
+  </div>
+  <div class="insight-bubble" id="insight-bubble-7">
+    <h4>Assessment Insight</h4>
+    <p>Exploring your conversational dynamics...</p>
+  </div>
+  <div class="insight-bubble" id="insight-bubble-13">
+    <h4>Assessment Insight</h4>
+    <p>Your interaction style is taking shape.</p>
+  </div>
+  <div class="insight-bubble" id="insight-bubble-18">
+    <h4>Assessment Insight</h4>
+    <p>Insights into your persuasive approach detected.</p>
+  </div>
+
+  <script>
+    let currentQuestion = 21;
+    const totalQuestions = 40;
+    const questionsPerPage = 20;
+    const totalAssessmentQuestions = 100;
+    const selectedOptions = {};
+
+    document.addEventListener('DOMContentLoaded', function() {
+      showQuestion(currentQuestion);
+      updateProgress();
+      setTimeout(() => showInsightBubble('insight-bubble-1'), 5000);
+    });
+
+    function showQuestion(questionNumber) {
+      document.querySelectorAll('.current-question').forEach(question => {
+        question.classList.remove('active');
+      });
+
+      const questionElement = document.getElementById(`question-${questionNumber}`);
+      if (questionElement) {
+        questionElement.classList.add('active');
+        if (selectedOptions[questionNumber]) {
+          questionElement.querySelectorAll('.option').forEach(opt => {
+            opt.classList.toggle('selected', opt.textContent === selectedOptions[questionNumber]);
+          });
+          document.getElementById('next-button').disabled = false;
+        } else {
+          document.getElementById('next-button').disabled = true;
+        }
+      }
+
+      document.getElementById('prev-button').disabled = questionNumber === 21;
+
+      if (questionNumber === totalQuestions) {
+        document.getElementById('next-button').textContent = 'Continue to Next Page';
+        document.getElementById('next-button').onclick = function() {
+          if (!this.disabled) window.location.href = 'assessment-page-3.html';
+        };
+      } else {
+        document.getElementById('next-button').textContent = 'Next';
+        document.getElementById('next-button').onclick = function() {
+          if (!this.disabled) nextQuestion();
+        };
+      }
+
+      const insightMap = {
+        27: 'insight-bubble-7',
+        33: 'insight-bubble-13',
+        38: 'insight-bubble-18'
+      };
+      if (insightMap[questionNumber]) showInsightBubble(insightMap[questionNumber]);
+    }
+
+    function selectOption(option, questionNumber) {
+      const questionElement = document.getElementById(`question-${questionNumber}`);
+      if (questionElement) {
+        questionElement.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+      }
+      option.classList.add('selected');
+      selectedOptions[questionNumber] = option.textContent;
+      document.getElementById('next-button').disabled = false;
+    }
+
+    function nextQuestion() {
+      if (currentQuestion < totalQuestions) {
+        currentQuestion++;
+        showQuestion(currentQuestion);
+        updateProgress();
+      }
+    }
+
+    function previousQuestion() {
+      if (currentQuestion > 21) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+        updateProgress();
+      }
+    }
+
+    function updateProgress() {
+      const overallProgress = Math.floor((currentQuestion / totalAssessmentQuestions) * 100);
+      const pageProgress = Math.floor(((currentQuestion - 20) / questionsPerPage) * 100);
+      document.getElementById('question-counter').textContent = `Question ${currentQuestion} of ${totalAssessmentQuestions}`;
+      document.getElementById('progress-percentage').textContent = `${overallProgress}% Complete`;
+      const progressBarFill = document.getElementById('progress-fill');
+      if (progressBarFill) progressBarFill.style.width = `${pageProgress}%`;
+    }
+
+    function showInsightBubble(bubbleId) {
+      document.querySelectorAll('.insight-bubble').forEach(bubble => bubble.classList.remove('active'));
+      const bubble = document.getElementById(bubbleId);
+      if (bubble) {
+        bubble.classList.add('active');
+        setTimeout(() => bubble.classList.remove('active'), 4000);
+      }
+    }
+
+function save() {
+  // Create an object to store the user's progress and answers
+  const savedData = {
+    currentQuestion: currentQuestion,
+    answers: {}
+  };
+  
+  // Collect all selected answers
+  document.querySelectorAll('.current-question').forEach(question => {
+    const questionNumber = question.dataset.questionNumber;
+    const selectedOption = question.querySelector('.option.selected');
+    
+    if (selectedOption) {
+      savedData.answers[questionNumber] = selectedOption.textContent;
+    }
+  });
+  
+  // Save to localStorage
+  localStorage.setItem('aeonAnimaAssessment', JSON.stringify(savedData));
+  
+  // Provide feedback to the user
+  alert('Your progress has been saved. You can continue later from this point.');
+}
+
+// Add this function to load saved data when the page loads
+function loadSavedData() {
+  const savedData = localStorage.getItem('aeonAnimaAssessment');
+  
+  if (savedData) {
+    const data = JSON.parse(savedData);
+    
+    // Set current question from saved data
+    if (data.currentQuestion >= 81 && data.currentQuestion <= 100) {
+      currentQuestion = data.currentQuestion;
+    }
+    
+    // Restore selected answers
+    if (data.answers) {
+      Object.keys(data.answers).forEach(questionNumber => {
+        const questionElement = document.getElementById(`question-${questionNumber}`);
+        if (questionElement) {
+          const options = questionElement.querySelectorAll('.option');
+          options.forEach(option => {
+            if (option.textContent === data.answers[questionNumber]) {
+              option.classList.add('selected');
+            }
+          });
+        }
+      });
+    }
+    
+    // Update the display
+    showQuestion(currentQuestion);
+    updateProgress();
+  }
+}
+
+// Modify the document.addEventListener to call loadSavedData
+document.addEventListener('DOMContentLoaded', function() {
+  // Load any saved data first
+  loadSavedData();
+  
+  // Then show the current question and update progress
+  showQuestion(currentQuestion);
+  updateProgress();
+  
+  // Show first insight after 5 seconds
+  setTimeout(() => {
+    document.getElementById('insight-bubble-1').classList.add('active');
+    
+    // Hide first insight after 4 seconds
+    setTimeout(() => {
+      document.getElementById('insight-bubble-1').classList.remove('active');
+    }, 4000);
+  }, 5000);
+});
+
+  </script>
+</body>
+</html>

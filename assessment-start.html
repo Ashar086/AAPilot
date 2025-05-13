@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeonAnima - Begin Your Assessment</title>
+  <style>
+    :root {
+      --primary-color: #6a3cb5;
+      --primary-light: #8a63d2;
+      --primary-dark: #4e2c87;
+      --secondary-color: #3498db;
+      --background: #121212;
+      --card-background: #1e1e1e;
+      --text-color: #e0e0e0;
+      --light-text: #aaaaaa;
+      --accent-color: #9d4edd;
+      
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+      
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2.5rem;
+      
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      
+      --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      --text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--text-color);
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0f1a, #1a1a2e, #2c1a4d, #38195a);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-lg);
+      color: white;
+      text-shadow: var(--text-shadow);
+      background: linear-gradient(135deg, #c2a0e5, #9d4edd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .assessment-card {
+      background: rgba(30, 30, 30, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(106, 60, 181, 0.3);
+      padding: var(--spacing-xl);
+      width: 100%;
+      margin-bottom: var(--spacing-xl);
+      box-shadow: var(--card-shadow);
+    }
+    
+    .assessment-info {
+      margin-bottom: var(--spacing-xl);
+    }
+    
+    .assessment-info h2 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--primary-light);
+    }
+    
+    .assessment-info p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .highlight-primary {
+      color: var(--primary-light);
+      font-weight: bold;
+    }
+    
+    .info-list {
+      text-align: left;
+      margin: var(--spacing-lg) 0;
+    }
+    
+    .info-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .info-icon {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      margin-right: var(--spacing-md);
+      flex-shrink: 0;
+    }
+    
+    .info-text {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    
+    .actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-md);
+      width: 100%;
+    }
+    
+    .begin-button {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: white;
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
+      width: 100%;
+      max-width: 400px;
+    }
+    
+    .begin-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 20px rgba(157, 78, 221, 0.6);
+    }
+    
+    .time-estimate {
+      margin-top: var(--spacing-md);
+      font-size: 0.9rem;
+      color: var(--light-text);
+    }
+    
+    .progress-container {
+      width: 100%;
+      max-width: 600px;
+      margin: var(--spacing-xl) 0;
+    }
+    
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-xs);
+      font-size: 0.9rem;
+    }
+    
+    .progress-bar {
+      height: 8px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      border-radius: var(--radius-full);
+    }
+    
+    .testimonial {
+      font-style: italic;
+      background: rgba(30, 30, 30, 0.5);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      margin-top: var(--spacing-lg);
+      position: relative;
+    }
+    
+    .testimonial::before {
+      content: """;
+      font-family: Georgia, serif;
+      font-size: 3rem;
+      position: absolute;
+      top: -15px;
+      left: 5px;
+      color: var(--primary-light);
+      opacity: 0.5;
+    }
+    
+    .author {
+      text-align: right;
+      font-style: normal;
+      margin-top: var(--spacing-sm);
+      color: var(--primary-light);
+    }
+    
+    /* New styles for Before You Begin section */
+    .before-begin {
+      background: rgba(106, 60, 181, 0.1);
+      border-left: 3px solid var(--primary-light);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-md);
+      margin: var(--spacing-xl) 0;
+      text-align: left;
+    }
+    
+    .before-item {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .before-icon {
+      color: var(--accent-color);
+      margin-right: var(--spacing-sm);
+      font-size: 1.2rem;
+    }
+    
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+    
+    .completion-benefits {
+      background: linear-gradient(135deg, rgba(106, 60, 181, 0.1), rgba(157, 78, 221, 0.1));
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+    }
+    
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .sparkle {
+      color: #ffcc5c;
+      margin-right: var(--spacing-sm);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--spacing-md);
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .assessment-card {
+        padding: var(--spacing-lg);
+      }
+      
+      .assessment-info h2 {
+        font-size: 1.3rem;
+      }
+      
+      .assessment-info p {
+        font-size: 1rem;
+      }
+      
+      .testimonial-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .assessment-card {
+        padding: var(--spacing-md);
+      }
+      
+      .begin-button {
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>Begin Your AeonAnima Journey</h1>
+    
+    <div class="assessment-card">
+      <!-- Moving the button to after the preparation content -->
+      <div class="assessment-info">
+        <h2>The Assessment Experience</h2>
+        <p>
+          Embark on a journey of self-discovery through 100 thoughtfully crafted questions spanning five core dimensions: 
+          <span class="highlight-primary"></br>
+            Personality, Communication, Interests, Beliefs, and Life Experience
+          </span>. 
+        </br>  This isn't just a personality test—it's the first step in shaping your 
+          <span class="highlight-primary">AeonAnima</span>: a living mirror of your inner self.
+        </p>
+        
+        <div class="info-list">
+          <div class="info-item">
+            <div class="info-icon">1</div>
+            <div class="info-text">Reflect on your traits, choices, and emotional rhythms across five distinct life dimensions</div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">2</div>
+            <div class="info-text">Receive your unique AeonAnima card, mapped across 8 resonance dimensions</div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">3</div>
+            <div class="info-text">Discover compatibility insights with others who share your wavelength</div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">4</div>
+            <div class="info-text">Join the waitlist to be among the first to experience the full AeonAnima platform</div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Action button and time estimate -->
+      <div class="actions">
+        <a href="assessment-page-1.html" style="width: 100%;">
+          <button class="begin-button">Begin Your Journey</button>
+        </a>
+        <div class="time-estimate"><b>Time investment: 15-20 minutes</b> of self-discovery that will illuminate your path forward. Each question brings you closer to your authentic AeonAnima.</div>
+      </div>
+      </br>
+      <!-- New Before You Begin section -->
+      <div class="assessment-info">
+        <h2>Before You Begin</h2>
+        <div class="before-begin">
+          <div class="before-item">
+            <div class="before-icon">✨</div>
+            <div class="info-text">Find a comfortable space where you feel relaxed and unhurried.</div>
+          </div>
+          <div class="before-item">
+            <div class="before-icon">✨</div>
+            <div class="info-text">Answer based on your <b>first instinct</b> — what feels most true today.</div>
+          </div>
+          <div class="before-item">
+            <div class="before-icon">✨</div>
+            <div class="info-text">There are no right or wrong answers. Your AeonAnima is a reflection of your evolving self.</div>
+          </div>
+          <div class="before-item">
+            <div class="before-icon">✨</div>
+            <div class="info-text">Honesty is a gift you give yourself.</div>
+          </div>
+          <div class="before-item">
+            <div class="before-icon">✨</div>
+            <div class="info-text">If any question feels too personal, you may skip and continue your journey.</div>
+          </div>
+          <div class="before-item">
+            <div class="before-icon">✨</div>
+            <div class="info-text">Enjoy the process of meeting yourself anew.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Privacy & Personal Comfort section -->
+      <div class="assessment-info">
+        <h2>Privacy & Personal Comfort</h2>
+        <p><b>Your privacy matters.</b> Your responses are yours alone. We do not sell, share, or disclose your answers to any third parties. Your insights are used solely to build your AeonAnima and enrich your personal journey.</p>
+        <p><b>Answer only what feels right.</b> Some questions may feel introspective or emotional. You are free to skip any question that feels too sensitive.</p>
+        <p><b>This is a mirror, not a judgment.</b> Your AeonAnima reflects your unique inner world. There are no right or wrong answers—only what resonates with you today.</p>
+      </div>
+      
+      <!-- Added completion benefits section -->
+      <div class="assessment-info">
+        <h2>What You'll Gain</h2>
+        <div class="completion-benefits">
+          <div class="benefit-item">
+            <div class="sparkle">✦</div>
+            <div class="info-text">Deep insights into your personal patterns and tendencies</div>
+          </div>
+          <div class="benefit-item">
+            <div class="sparkle">✦</div>
+            <div class="info-text">A personalized AeonAnima that evolves with you over time</div>
+          </div>
+          <div class="benefit-item">
+            <div class="sparkle">✦</div>
+            <div class="info-text">Tools to enhance your self-awareness and personal growth</div>
+          </div>
+          <div class="benefit-item">
+            <div class="sparkle">✦</div>
+            <div class="info-text">Early access to our full platform and community of like-minded souls</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expanded testimonials section -->
+      <div class="assessment-info">
+        <h2>From Those Who've Walked This Path</h2>
+        <div class="testimonial-grid">
+          <div class="testimonial">
+            <p>The assessment questions made me reflect deeply on aspects of myself I rarely consider. Seeing my AeonAnima revealed was like meeting a part of myself I've always known existed but never fully understood.</p>
+            <div class="author">— Jordan K.</div>
+          </div>
+          <div class="testimonial">
+            <p>I was hesitant about answering 100 questions, but each one flowed naturally into the next. The experience was surprisingly enjoyable and the insights I gained were well worth the time invested.</p>
+            <div class="author">— Mira T.</div>
+          </div>
+        </div>
+      </div>
+      <!-- Action button and time estimate -->
+      <div class="actions">
+        <a href="assessment-page-1.html" style="width: 100%;">
+          <button class="begin-button">Begin Your Journey</button>
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</body>
+</html>
